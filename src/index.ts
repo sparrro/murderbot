@@ -15,7 +15,7 @@ client.once("clientReady", () => {
 
 client.login(TOKEN)
 
-client.on("guildCreate", async guild => {
+/* client.on("guildCreate", async guild => {
     const mods = await findMods(guild);
     for(const mod of mods.values()) {
         console.log(mod.user.globalName)
@@ -30,9 +30,9 @@ client.on("guildCreate", async guild => {
             console.log(`Failed to DM ${mod}`);
         }
     }
-})
+}) */
 
-/* const joins: number[] = [];
+const joins: number[] = [];
 client.on("guildMemberAdd", async member => {
 
     const guild = member.guild;
@@ -45,7 +45,7 @@ client.on("guildMemberAdd", async member => {
     }
 
     if (joins.length >= 10) {
-        const mods = findMods(guild);
+        const mods = await findMods(guild);
 
         for (const mod of mods.values()) {
             try {
@@ -56,4 +56,4 @@ client.on("guildMemberAdd", async member => {
         }
     }
 
-}) */
+})
