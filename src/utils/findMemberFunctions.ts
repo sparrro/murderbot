@@ -8,3 +8,9 @@ export const findMods = async (server: Guild) => {
         member.roles.cache.some(role => modRoles.includes(role.name))
     )
 }
+
+export const findByUsername = async (server: Guild, username: string) => {
+    await server.members.fetch();
+
+    return server.members.cache.filter(member => member.user.username === username).first();
+}
