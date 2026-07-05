@@ -1,5 +1,5 @@
 import { TOKEN } from "./config"; 
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
 import { findMods } from "./utils/findMemberFunctions";
 
 const client = new Client({
@@ -70,13 +70,27 @@ client.on("guildMemberAdd", async member => {
 });
 
 //spam detector
+const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = []
 client.on("messageCreate", message => {
     if (message.author.bot) return;
 
-    //hitta alla meddelanden med samma författare i kronologisk ordning
+    console.log(`Message sent by ${message.author.displayName}: ${message.content}`);
 
-    //kolla om de senaste två meddelandena hade mindre än en sekunds fördröjning
+    messages.push(message); //if the bot is going to be run 24/7 from some cloud service, make it clean this up every now and then
 
-    //om de hade det, sätt användaren i karantän och meddela mig
+    const userId = message.author.id;
+    const usersMsgs = messages.filter(msg =>
+        msg.author.id === userId
+    );
 
-})
+    if (usersMsgs.length === 1) return;
+
+    if (usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp < 1000) {
+        console.log(`Suspiciously fast message sent by ${message.author.displayName}`);
+    }
+
+});
+
+//meddela nya medlemmar om att de behöver en geografisk roll
+
+//sparka medlemmar som inte har en geografisk roll 24 timmar efter att de gick med
