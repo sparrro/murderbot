@@ -36,7 +36,6 @@ const checkMemberRoles = (server) => __awaiter(void 0, void 0, void 0, function*
             continue;
         const hasGeoRole = member.roles.cache.some(role => geoRoles.has(role.id));
         if (hasGeoRole) {
-            console.log(`${member.displayName} has a geographic role`);
         }
         else {
             const ageOfMembership = Date.now() - member.joinedTimestamp;

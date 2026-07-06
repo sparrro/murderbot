@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
 const discord_js_1 = require("discord.js");
 const findMemberFunctions_1 = require("./utils/findMemberFunctions");
-const checkMemberRoles_1 = require("./utils/checkMemberRoles");
 const client = new discord_js_1.Client({
     intents: [
         discord_js_1.GatewayIntentBits.GuildMembers,
@@ -26,7 +25,7 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
     const server = client.guilds.cache.get(config_1.SERVER_ID);
     if (!server)
         return;
-    yield (0, checkMemberRoles_1.checkMemberRoles)(server);
+    //await checkMemberRoles(server);
 }));
 client.login(config_1.TOKEN);
 //test dm sent to all moderators
@@ -83,16 +82,39 @@ const messages = [];
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
     if (message.author.bot)
         return;
-    console.log(`Message sent by ${message.author.displayName}: ${message.content}`);
     messages.push(message); //if the bot is going to be run 24/7 from some cloud service, make it clean this up every now and then
     const userId = message.author.id;
     const usersMsgs = messages.filter(msg => msg.author.id === userId);
     if (usersMsgs.length === 1)
         return;
-    if (usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp < 1000) {
+    if (usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp < 500) {
         console.log(`Suspiciously fast message sent by ${message.author.displayName}`);
+        if (usersMsgs[usersMsgs.length - 1].content === usersMsgs[usersMsgs.length - 2].content) {
+            /* for (const msg of usersMsgs) {
+                if (msg.content === usersMsgs[usersMsgs.length - 1].content) {
+                    try {
+                        await msg.delete();
+                    } catch {
+                        console.log(`Failed to delete message ${msg.content} by ${msg.author.displayName}, a presumed spam bot account`)
+                    }
+                }
+            }
+            try {
+                await message.member?.kick("Compromised account, get two factor authentication before rejoining");
+            } catch {
+                const mods = await findMods(message.guild!);
+                for (const mod of mods.values()) {
+                    try {
+                        await mod.send(`I think ${message.author.displayName}'s account has been compromised but I was unable to kick them`)
+                    } catch {
+                        console.log(`Failed to dm ${mod.displayName}`);
+                    }
+                }
+            } */
+            message.author.send(`You sent two messages in ${usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp} milliseconds`);
+        }
         try {
-            yield message.author.send("That was really fast wow");
+            yield message.author.send("That's some fast typing there");
         }
         catch (_a) {
             console.log(`Failed to dm ${message.author.displayName}`);
@@ -101,10 +123,3 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
 }));
 //meddela nya medlemmar om att de behöver en geografisk roll
 //sparka medlemmar som inte har en geografisk roll 24 timmar efter att de gick med
-const geoRoles = [
-    "North America"
-];
-setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
-    //hämta servern
-    //hämta medlemmarna
-}), 1000 * 60 * 10);

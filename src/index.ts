@@ -21,7 +21,7 @@ client.once("clientReady", async () => {
     const server = client.guilds.cache.get(SERVER_ID!);
     if (!server) return;
 
-    await checkMemberRoles(server);
+    //await checkMemberRoles(server);
 
 });
 
@@ -45,9 +45,9 @@ client.login(TOKEN)
     }
 }) */
 
-client.on("raw", packet => {
+/* client.on("raw", packet => {
     console.log("Raw event: " + packet.t)
-})
+}) */
 
 //raid warning system
 const joins: number[] = [];
@@ -92,8 +92,6 @@ const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = []
 client.on("messageCreate", async message => {
     if (message.author.bot) return;
 
-    console.log(`Message sent by ${message.author.displayName}: ${message.content}`);
-
     messages.push(message); //if the bot is going to be run 24/7 from some cloud service, make it clean this up every now and then
 
     const userId = message.author.id;
@@ -103,10 +101,34 @@ client.on("messageCreate", async message => {
 
     if (usersMsgs.length === 1) return;
 
-    if (usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp < 1000) {
+    if (usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp < 500) {
         console.log(`Suspiciously fast message sent by ${message.author.displayName}`);
+        if (usersMsgs[usersMsgs.length - 1].content === usersMsgs[usersMsgs.length - 2].content) {
+            /* for (const msg of usersMsgs) {
+                if (msg.content === usersMsgs[usersMsgs.length - 1].content) {
+                    try {
+                        await msg.delete();
+                    } catch {
+                        console.log(`Failed to delete message ${msg.content} by ${msg.author.displayName}, a presumed spam bot account`)
+                    }
+                }
+            }
+            try {
+                await message.member?.kick("Compromised account, get two factor authentication before rejoining");
+            } catch {
+                const mods = await findMods(message.guild!);
+                for (const mod of mods.values()) {
+                    try {
+                        await mod.send(`I think ${message.author.displayName}'s account has been compromised but I was unable to kick them`)
+                    } catch {
+                        console.log(`Failed to dm ${mod.displayName}`);
+                    }
+                }
+            } */
+           message.author.send(`You sent two messages in ${usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp} milliseconds`)
+        }
         try {
-            await message.author.send("That was really fast wow")
+            await message.author.send("That's some fast typing there")
         } catch {
             console.log(`Failed to dm ${message.author.displayName}`)
         }
@@ -117,12 +139,3 @@ client.on("messageCreate", async message => {
 //meddela nya medlemmar om att de behöver en geografisk roll
 
 //sparka medlemmar som inte har en geografisk roll 24 timmar efter att de gick med
-const geoRoles = [
-    "North America"
-]
-setInterval(async () => {
-
-    //hämta servern
-    //hämta medlemmarna
-
-}, 1000 * 60 * 10);
