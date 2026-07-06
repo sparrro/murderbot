@@ -6,7 +6,8 @@ const client = new Client({
     intents: [
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
     ]
 });
 
@@ -34,9 +35,15 @@ client.login(TOKEN)
     }
 }) */
 
+client.on("raw", packet => {
+    console.log("Raw event: " + packet.t)
+})
+
 //raid warning system
 const joins: number[] = [];
 client.on("guildMemberAdd", async member => {
+
+    console.log(`${member.displayName} just joined`)
 
     const guild = member.guild;
 
@@ -44,6 +51,7 @@ client.on("guildMemberAdd", async member => {
     joins.push(now);
 
     while (joins.length && now - joins[0] > 30000) {
+        console.log(joins)
         joins.shift();
     }
 
@@ -71,7 +79,7 @@ client.on("guildMemberAdd", async member => {
 
 //spam detector
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = []
-client.on("messageCreate", message => {
+client.on("messageCreate", async message => {
     if (message.author.bot) return;
 
     console.log(`Message sent by ${message.author.displayName}: ${message.content}`);
@@ -87,6 +95,7 @@ client.on("messageCreate", message => {
 
     if (usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp < 1000) {
         console.log(`Suspiciously fast message sent by ${message.author.displayName}`);
+        await message.author.send("That was really fast wow")
     }
 
 });
