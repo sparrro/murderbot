@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findByUsername = exports.findMods = void 0;
+exports.findAllMembers = exports.findByUsername = exports.findMods = void 0;
 const findMods = (server) => __awaiter(void 0, void 0, void 0, function* () {
     yield server.members.fetch();
     const modRoles = ["MOD", "Moderator"];
@@ -21,3 +21,8 @@ const findByUsername = (server, username) => __awaiter(void 0, void 0, void 0, f
     return server.members.cache.filter(member => member.user.username === username).first();
 });
 exports.findByUsername = findByUsername;
+const findAllMembers = (server) => __awaiter(void 0, void 0, void 0, function* () {
+    yield server.members.fetch();
+    return server.members.cache.values();
+});
+exports.findAllMembers = findAllMembers;

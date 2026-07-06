@@ -1,6 +1,10 @@
-import { TOKEN } from "./config"; 
+import { TOKEN, SERVER_ID } from "./config"; 
 import { Client, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
-import { findMods } from "./utils/findMemberFunctions";
+import {
+    findMods,
+    findAllMembers
+ } from "./utils/findMemberFunctions";
+import { checkMemberRoles } from "./utils/checkMemberRoles";
 
 const client = new Client({
     intents: [
@@ -11,8 +15,14 @@ const client = new Client({
     ]
 });
 
-client.once("clientReady", () => {
+client.once("clientReady", async () => {
     console.log(`Logged in as ${client.user!.tag}`);
+
+    const server = client.guilds.cache.get(SERVER_ID!);
+    if (!server) return;
+
+    await checkMemberRoles(server);
+
 });
 
 client.login(TOKEN)
@@ -95,7 +105,11 @@ client.on("messageCreate", async message => {
 
     if (usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp < 1000) {
         console.log(`Suspiciously fast message sent by ${message.author.displayName}`);
-        await message.author.send("That was really fast wow")
+        try {
+            await message.author.send("That was really fast wow")
+        } catch {
+            console.log(`Failed to dm ${message.author.displayName}`)
+        }
     }
 
 });
@@ -103,3 +117,12 @@ client.on("messageCreate", async message => {
 //meddela nya medlemmar om att de behöver en geografisk roll
 
 //sparka medlemmar som inte har en geografisk roll 24 timmar efter att de gick med
+const geoRoles = [
+    "North America"
+]
+setInterval(async () => {
+
+    //hämta servern
+    //hämta medlemmarna
+
+}, 1000 * 60 * 10);

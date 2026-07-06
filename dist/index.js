@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
 const discord_js_1 = require("discord.js");
 const findMemberFunctions_1 = require("./utils/findMemberFunctions");
+const checkMemberRoles_1 = require("./utils/checkMemberRoles");
 const client = new discord_js_1.Client({
     intents: [
         discord_js_1.GatewayIntentBits.GuildMembers,
@@ -20,9 +21,13 @@ const client = new discord_js_1.Client({
         discord_js_1.GatewayIntentBits.MessageContent
     ]
 });
-client.once("clientReady", () => {
+client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Logged in as ${client.user.tag}`);
-});
+    const server = client.guilds.cache.get(config_1.SERVER_ID);
+    if (!server)
+        return;
+    yield (0, checkMemberRoles_1.checkMemberRoles)(server);
+}));
 client.login(config_1.TOKEN);
 //test dm sent to all moderators
 /* client.on("guildCreate", async guild => {
@@ -86,8 +91,20 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         return;
     if (usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp < 1000) {
         console.log(`Suspiciously fast message sent by ${message.author.displayName}`);
-        yield message.author.send("That was really fast wow");
+        try {
+            yield message.author.send("That was really fast wow");
+        }
+        catch (_a) {
+            console.log(`Failed to dm ${message.author.displayName}`);
+        }
     }
 }));
 //meddela nya medlemmar om att de behöver en geografisk roll
 //sparka medlemmar som inte har en geografisk roll 24 timmar efter att de gick med
+const geoRoles = [
+    "North America"
+];
+setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+    //hämta servern
+    //hämta medlemmarna
+}), 1000 * 60 * 10);
