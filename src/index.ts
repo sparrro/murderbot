@@ -51,6 +51,12 @@ client.login(TOKEN)
 
 //raid warning system
 const joins: number[] = [];
+//clear out global arrays every now and then
+setInterval(() => {
+    if (joins.length && Date.now() - joins[joins.length] - 1 > 1000 * 60 * 5) {
+        joins.length = 0
+    }
+}, 1000 * 60 * 15);
 client.on("guildMemberAdd", async member => {
 
     console.log(`${member.displayName} just joined`)
@@ -88,11 +94,16 @@ client.on("guildMemberAdd", async member => {
 });
 
 //spam detector
-const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = []
+const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
+setInterval(() => {
+    if (messages.length && Date.now() - messages[messages.length - 1].createdTimestamp > 1000 * 60 * 5) {
+        messages.length = 0
+    }
+}, 1000 * 60 * 15);
 client.on("messageCreate", async message => {
     if (message.author.bot) return;
 
-    messages.push(message); //if the bot is going to be run 24/7 from some cloud service, make it clean this up every now and then
+    messages.push(message);
 
     const userId = message.author.id;
     const usersMsgs = messages.filter(msg =>
