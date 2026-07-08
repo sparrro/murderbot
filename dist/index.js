@@ -25,6 +25,13 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
     const server = client.guilds.cache.get(config_1.SERVER_ID);
     if (!server)
         return;
+    const father = yield (0, findMemberFunctions_1.findByUsername)(server, "sparrrrro");
+    if (!father) {
+        console.log("Elohi, Elohi, Lama sabachthani?");
+    }
+    else {
+        father.send("Find you by username");
+    }
     //await checkMemberRoles(server);
 }));
 client.login(config_1.TOKEN);
@@ -45,9 +52,9 @@ client.login(config_1.TOKEN);
         }
     }
 }) */
-client.on("raw", packet => {
-    console.log("Raw event: " + packet.t);
-});
+/* client.on("raw", packet => {
+    console.log("Raw event: " + packet.t)
+}) */
 //raid warning system
 const joins = [];
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
@@ -58,6 +65,9 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
     while (joins.length && now - joins[0] > 30000) {
         console.log(joins);
         joins.shift();
+    }
+    if (joins.length > 0) {
+        console.log("Just confirming the raid detector works... ", `Joins in last 30 seconds: ${joins.length}...`);
     }
     if (joins.length >= 10) {
         const mods = yield (0, findMemberFunctions_1.findMods)(guild);
@@ -79,10 +89,19 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
 }));
 //spam detector
 const messages = [];
+let cacheCleaningIterator = 0;
+setInterval(() => {
+    cacheCleaningIterator++;
+    console.log("Cache cleaned out" + cacheCleaningIterator + "times");
+    if (messages.length && Date.now() - messages[messages.length - 1].createdTimestamp > 1000 * 60 * 5) {
+        messages.length = 0;
+        console.log("Cleaned out messages cache...");
+    }
+}, 1000 * 60 * 15);
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
     if (message.author.bot)
         return;
-    messages.push(message); //if the bot is going to be run 24/7 from some cloud service, make it clean this up every now and then
+    messages.push(message);
     const userId = message.author.id;
     const usersMsgs = messages.filter(msg => msg.author.id === userId);
     if (usersMsgs.length === 1)
@@ -111,10 +130,10 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
                     }
                 }
             } */
-            message.author.send(`You sent two messages in ${usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp} milliseconds`);
+            //message.author.send(`You sent two messages in ${usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp} milliseconds`)
         }
         try {
-            yield message.author.send("That's some fast typing there");
+            //await message.author.send("That's some fast typing there")
         }
         catch (_a) {
             console.log(`Failed to dm ${message.author.displayName}`);

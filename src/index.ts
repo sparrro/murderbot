@@ -2,7 +2,8 @@ import { TOKEN, SERVER_ID } from "./config";
 import { Client, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
-    findAllMembers
+    findAllMembers,
+    findByUsername
  } from "./utils/findMemberFunctions";
 import { checkMemberRoles } from "./utils/checkMemberRoles";
 
@@ -51,12 +52,6 @@ client.login(TOKEN)
 
 //raid warning system
 const joins: number[] = [];
-//clear out global arrays every now and then
-setInterval(() => {
-    if (joins.length && Date.now() - joins[joins.length] - 1 > 1000 * 60 * 5) {
-        joins.length = 0
-    }
-}, 1000 * 60 * 15);
 client.on("guildMemberAdd", async member => {
 
     console.log(`${member.displayName} just joined`)
@@ -69,6 +64,10 @@ client.on("guildMemberAdd", async member => {
     while (joins.length && now - joins[0] > 30000) {
         console.log(joins)
         joins.shift();
+    }
+
+    if (joins.length > 0) {
+        console.log("Just confirming the raid detector works... ", `Joins in last 30 seconds: ${joins.length}...`)
     }
 
     if (joins.length >= 10) {
@@ -98,6 +97,7 @@ const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
 setInterval(() => {
     if (messages.length && Date.now() - messages[messages.length - 1].createdTimestamp > 1000 * 60 * 5) {
         messages.length = 0
+        console.log("Cleaned out messages cache...")
     }
 }, 1000 * 60 * 15);
 client.on("messageCreate", async message => {
@@ -136,10 +136,10 @@ client.on("messageCreate", async message => {
                     }
                 }
             } */
-           message.author.send(`You sent two messages in ${usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp} milliseconds`)
+           //message.author.send(`You sent two messages in ${usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp} milliseconds`)
         }
         try {
-            await message.author.send("That's some fast typing there")
+            //await message.author.send("That's some fast typing there")
         } catch {
             console.log(`Failed to dm ${message.author.displayName}`)
         }

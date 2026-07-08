@@ -39,6 +39,27 @@ const checkMemberRoles = (server) => __awaiter(void 0, void 0, void 0, function*
         }
         else {
             const ageOfMembership = Date.now() - member.joinedTimestamp;
+            if (ageOfMembership > 1000 * 60 * 60 * 24) {
+                try {
+                    member.send("You have one hour to get yourself a role or you will be kicked from the server");
+                    setTimeout(() => {
+                        if (member.roles.cache.some(role => geoRoles.has(role.id))) {
+                            member.kick("Failed to get required roles"); //it has to fetch the member again to check!
+                        }
+                    }, 1000 * 60 * 60);
+                }
+                catch (_a) {
+                    const mods = yield (0, findMemberFunctions_1.findMods)(server);
+                    for (const mod of mods.values()) {
+                        try {
+                            mod.send(`Failed to kick user ${member.displayName}, who failed to get required roles within 24 hours of joining`);
+                        }
+                        catch (_b) {
+                            console.log(`Failed to dm mod ${mod.displayName}`);
+                        }
+                    }
+                }
+            }
             console.log(`${member.displayName} does not have a geographic role and joined ${ageOfMembership} ago`);
         }
     }
