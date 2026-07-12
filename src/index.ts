@@ -22,7 +22,7 @@ client.once("clientReady", async () => {
     const server = client.guilds.cache.get(SERVER_ID!);
     if (!server) return;
 
-    //await checkMemberRoles(server);
+    /* await checkMemberRoles(server); */ //lola gör den själv
 
 });
 

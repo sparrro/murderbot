@@ -38,7 +38,7 @@ export const checkMemberRoles = async (server: Guild) => {
                     member.send("You have one hour to get yourself a role or you will be kicked from the server")
                     setTimeout(() => {
                         if (member.roles.cache.some(role => geoRoles.has(role.id))) {
-                            member.kick("Failed to get required roles") //it has to fetch the member again to check!
+                            member.kick("Failed to get required roles") //Den kommer troligen behöva hämta medlemsobjektet igen för att uppdatera
                         }
                     }, 1000 * 60 * 60);
                 } catch {
