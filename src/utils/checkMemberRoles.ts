@@ -1,5 +1,6 @@
 import { Guild } from "discord.js";
 import { findAllMembers, findMods } from "./findMemberFunctions";
+//redundant; lola is adding the same functionality to botchi
 
 const geoRoles = new Set([
     "1517845436709339207", //North America
@@ -43,7 +44,7 @@ export const checkMemberRoles = async (server: Guild) => {
                     }, 1000 * 60 * 60);
                 } catch {
                     const mods = await findMods(server);
-                    for (const mod of mods.values()) {
+                    for (const mod of mods) {
                         try {
                             mod.send(`Failed to kick user ${member.displayName}, who failed to get required roles within 24 hours of joining`)
                         } catch {
