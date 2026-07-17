@@ -12,12 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
 const discord_js_1 = require("discord.js");
 const findMemberFunctions_1 = require("./utils/findMemberFunctions");
+const reminder = require("./utils/reminder");
+//cached stuff
+const messages = [];
+const joins = [];
 const client = new discord_js_1.Client({
     intents: [
         discord_js_1.GatewayIntentBits.GuildMembers,
         discord_js_1.GatewayIntentBits.Guilds,
         discord_js_1.GatewayIntentBits.GuildMessages,
-        discord_js_1.GatewayIntentBits.MessageContent
+        discord_js_1.GatewayIntentBits.MessageContent,
+        discord_js_1.GatewayIntentBits.DirectMessages
     ]
 });
 client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -25,11 +30,13 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
     const server = client.guilds.cache.get(config_1.SERVER_ID);
     if (!server)
         return;
+    //const her = await findTheOne(server);
+    const father = yield (0, findMemberFunctions_1.findFather)(server);
+    reminder.remindHer(father, 1);
     /* await checkMemberRoles(server); */ //lola gör den själv
 }));
 client.login(config_1.TOKEN);
 //raid warning system
-const joins = [];
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`${member.displayName} just joined`);
     const guild = member.guild;
@@ -61,7 +68,6 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
     }
 }));
 //spam detector
-const messages = [];
 /*
 if the server becomes much more active the clearout condition should be changed
 eg keep the most recent spam detection in some variable and clear the cache if it's more than 5 minutes old
@@ -74,6 +80,7 @@ setInterval(() => {
     }
 }, 1000 * 60 * 15);
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("They both work btw");
     if (message.author.bot)
         return;
     messages.push(message);
@@ -83,21 +90,27 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         return;
     const latest = usersMsgs[usersMsgs.length - 1];
     const penultimate = usersMsgs[usersMsgs.length - 2];
-    //testing...
-    if (penultimate) {
-        console.log(`
-            
-            `);
-        console.log(`Poster: ${message.author.displayName}`);
-        console.log(`Latest message: ${latest.content}`);
-        console.log(`Penultimate message: ${penultimate.content}`);
-        console.log(`Delay: ${latest.createdTimestamp - penultimate.createdTimestamp} milliseconds`);
-        console.log("End of test");
-    }
     if (latest.createdTimestamp - penultimate.createdTimestamp < 500) {
         console.log(`Suspiciously fast message sent by ${message.author.displayName}; delay: ${latest.createdTimestamp - penultimate.createdTimestamp} milliseconds`);
         if (latest.content.length > 10 && latest.content === penultimate.content) {
             //konsultera lola om vad som bör ske
         }
     }
+    ;
 }));
+client.on("messageCreate", (message) => {
+    if (message.guild)
+        return;
+    if (message.author.id != config_1.MY_ID)
+        return;
+    if (message.content === "STOP") {
+        message.reply("Oki I'll stop. If you ever want me to start again, just dm me START");
+        reminder.stopBothering();
+    }
+    ;
+    if (message.content === "START") {
+        message.reply("Oki I'll start again");
+        reminder.startAgain();
+    }
+    ;
+});

@@ -1,18 +1,27 @@
-import { TOKEN, SERVER_ID } from "./config"; 
+import { TOKEN, SERVER_ID, LOLAPAZ_ID, MY_ID } from "./config"; 
 import { Client, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
     findAllMembers,
-    findByUsername
+    findByUsername,
+    findTheOne,
+    findFather
  } from "./utils/findMemberFunctions";
 import { checkMemberRoles } from "./utils/checkMemberRoles";
+import { randomInterval } from "./utils/randomTime";
+const reminder = require("./utils/reminder")
+
+//cached stuff
+const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
+const joins: number[] = [];
 
 const client = new Client({
     intents: [
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.DirectMessages
     ]
 });
 
@@ -22,6 +31,10 @@ client.once("clientReady", async () => {
     const server = client.guilds.cache.get(SERVER_ID!);
     if (!server) return;
 
+    //const her = await findTheOne(server);
+    const father = await findFather(server);
+    reminder.remindHer(father, 1)
+
     /* await checkMemberRoles(server); */ //lola gör den själv
 
 });
@@ -29,7 +42,6 @@ client.once("clientReady", async () => {
 client.login(TOKEN)
 
 //raid warning system
-const joins: number[] = [];
 client.on("guildMemberAdd", async member => {
 
     console.log(`${member.displayName} just joined`)
@@ -71,7 +83,6 @@ client.on("guildMemberAdd", async member => {
 });
 
 //spam detector
-const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
 /* 
 if the server becomes much more active the clearout condition should be changed
 eg keep the most recent spam detection in some variable and clear the cache if it's more than 5 minutes old
@@ -84,6 +95,7 @@ setInterval(() => {
     }
 }, 1000 * 60 * 15);
 client.on("messageCreate", async message => {
+    console.log("They both work btw")
     if (message.author.bot) return;
 
     messages.push(message);
@@ -103,6 +115,19 @@ client.on("messageCreate", async message => {
         if (latest.content.length > 10 && latest.content === penultimate.content) {
             //konsultera lola om vad som bör ske
         }
-    }
+    };
 
+});
+
+client.on("messageCreate", (message) => {
+    if (message.guild) return;
+    if (message.author.id != MY_ID) return;
+    if (message.content === "STOP") {
+        message.reply("Oki I'll stop. If you ever want me to start again, just dm me START")
+        reminder.stopBothering();
+    };
+    if (message.content === "START") {
+        message.reply("Oki I'll start again")
+        reminder.startAgain();
+    };
 });

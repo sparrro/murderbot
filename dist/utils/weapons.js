@@ -66,3 +66,27 @@ const demoteModerator = (user) => __awaiter(void 0, void 0, void 0, function* ()
     ;
 });
 exports.demoteModerator = demoteModerator;
+/* export const kickUser = async (user: GuildMember, reason: string) => {
+    const father = await findFather(user.guild);
+    try {
+        await user.kick(reason);
+    } catch {
+        const errorMsg = `Failed to kick ${user.displayName} for ${reason}`;
+        console.log(errorMsg);
+        await father?.send(errorMsg);
+    };
+};
+
+export const banUser = async (user: GuildMember, reason: string) => {
+    const father = await findFather(user.guild);
+    try {
+        await user.ban({
+            reason: reason
+        });
+    } catch {
+        const errorMsg = `Failed to ban ${user.displayName} for ${reason}`;
+        console.log(errorMsg);
+        await father?.send(errorMsg);
+    };
+}; */
+//to add: demote all but trusted moderators; quarantine whole server

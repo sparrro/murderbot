@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findAllMembers = exports.findFather = exports.findByUsername = exports.findMods = void 0;
+exports.findTheOne = exports.findAllMembers = exports.findFather = exports.findByUsername = exports.findMods = void 0;
 const config_1 = require("../config");
 const findMods = (server) => __awaiter(void 0, void 0, void 0, function* () {
     yield server.members.fetch();
@@ -33,3 +33,8 @@ const findAllMembers = (server) => __awaiter(void 0, void 0, void 0, function* (
     return server.members.cache.values();
 });
 exports.findAllMembers = findAllMembers;
+const findTheOne = (server) => __awaiter(void 0, void 0, void 0, function* () {
+    yield server.members.fetch();
+    return server.members.cache.find(user => user.id === config_1.LOLAPAZ_ID);
+});
+exports.findTheOne = findTheOne;

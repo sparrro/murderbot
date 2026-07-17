@@ -7,7 +7,8 @@ const {
     CLIENT_ID,
     SERVER_ID,
     MY_ID,
-    MODROLE_ID
+    MODROLE_ID,
+    LOLAPAZ_ID
 } = process.env;
 
 if (
@@ -15,7 +16,8 @@ if (
     !CLIENT_ID ||
     !SERVER_ID ||
     !MY_ID ||
-    !MODROLE_ID
+    !MODROLE_ID ||
+    !LOLAPAZ_ID
 ) throw new Error("Missing environment variables");
 
 export {
@@ -23,5 +25,6 @@ export {
     CLIENT_ID,
     SERVER_ID,
     MY_ID, 
-    MODROLE_ID 
+    MODROLE_ID,
+    LOLAPAZ_ID
 };
