@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkMemberRoles = void 0;
 const findMemberFunctions_1 = require("./findMemberFunctions");
+//redundant; lola is adding the same functionality to botchi
 const geoRoles = new Set([
     "1517845436709339207", //North America
     "1517845442048561184", //Central America
@@ -44,13 +45,13 @@ const checkMemberRoles = (server) => __awaiter(void 0, void 0, void 0, function*
                     member.send("You have one hour to get yourself a role or you will be kicked from the server");
                     setTimeout(() => {
                         if (member.roles.cache.some(role => geoRoles.has(role.id))) {
-                            member.kick("Failed to get required roles"); //it has to fetch the member again to check!
+                            member.kick("Failed to get required roles"); //Den kommer troligen behöva hämta medlemsobjektet igen för att uppdatera
                         }
                     }, 1000 * 60 * 60);
                 }
                 catch (_a) {
                     const mods = yield (0, findMemberFunctions_1.findMods)(server);
-                    for (const mod of mods.values()) {
+                    for (const mod of mods) {
                         try {
                             mod.send(`Failed to kick user ${member.displayName}, who failed to get required roles within 24 hours of joining`);
                         }

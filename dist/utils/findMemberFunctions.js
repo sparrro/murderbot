@@ -9,11 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findAllMembers = exports.findByUsername = exports.findMods = void 0;
+exports.findAllMembers = exports.findFather = exports.findByUsername = exports.findMods = void 0;
+const config_1 = require("../config");
 const findMods = (server) => __awaiter(void 0, void 0, void 0, function* () {
     yield server.members.fetch();
-    const modRoles = ["MOD", "Moderator"];
-    return server.members.cache.filter(member => member.roles.cache.some(role => modRoles.includes(role.name)));
+    const modRoles = ["MOD", "Moderator"]; //MOD is redundant but it still works so whatever
+    const mods = server.members.cache.filter(member => member.roles.cache.some(role => modRoles.includes(role.name))).values();
+    return mods;
 });
 exports.findMods = findMods;
 const findByUsername = (server, username) => __awaiter(void 0, void 0, void 0, function* () {
@@ -21,6 +23,11 @@ const findByUsername = (server, username) => __awaiter(void 0, void 0, void 0, f
     return server.members.cache.filter(member => member.user.username === username).first();
 });
 exports.findByUsername = findByUsername;
+const findFather = (server) => __awaiter(void 0, void 0, void 0, function* () {
+    yield server.members.fetch();
+    return server.members.cache.find(user => user.id === config_1.MY_ID);
+});
+exports.findFather = findFather;
 const findAllMembers = (server) => __awaiter(void 0, void 0, void 0, function* () {
     yield server.members.fetch();
     return server.members.cache.values();

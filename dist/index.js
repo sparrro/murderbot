@@ -25,36 +25,9 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
     const server = client.guilds.cache.get(config_1.SERVER_ID);
     if (!server)
         return;
-    const father = yield (0, findMemberFunctions_1.findByUsername)(server, "sparrrrro");
-    if (!father) {
-        console.log("Elohi, Elohi, Lama sabachthani?");
-    }
-    else {
-        father.send("Find you by username");
-    }
-    //await checkMemberRoles(server);
+    /* await checkMemberRoles(server); */ //lola gör den själv
 }));
 client.login(config_1.TOKEN);
-//test dm sent to all moderators
-/* client.on("guildCreate", async guild => {
-    const mods = await findMods(guild);
-    for(const mod of mods.values()) {
-        console.log(mod.user.globalName)
-    }
-    for (const mod of mods.values()) {
-        try {
-            await mod.send(
-                `This is a test message
-                If you are a moderator I am working as intended
-                If you are not a moderator please inform Sparrro that he made me wrong again`)
-        } catch {
-            console.log(`Failed to DM ${mod}`);
-        }
-    }
-}) */
-/* client.on("raw", packet => {
-    console.log("Raw event: " + packet.t)
-}) */
 //raid warning system
 const joins = [];
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
@@ -71,7 +44,7 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
     }
     if (joins.length >= 10) {
         const mods = yield (0, findMemberFunctions_1.findMods)(guild);
-        for (const mod of mods.values()) {
+        for (const mod of mods) {
             try {
                 yield mod.send("Possible raid detected; 10 or more people joined within last 30 seconds");
             }
@@ -81,18 +54,20 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
         }
     }
     if (joins.length >= 25) {
-        //gör något mer drastiskt?
+        //konsultera lola
     }
     if (joins.length >= 50) {
-        //sätt servern i karantän och skicka mig en lista över de senaste 50 medlemmarna som gick med
+        //konsultera lola
     }
 }));
 //spam detector
 const messages = [];
-let cacheCleaningIterator = 0;
+/*
+if the server becomes much more active the clearout condition should be changed
+eg keep the most recent spam detection in some variable and clear the cache if it's more than 5 minutes old
+or something like that
+ */
 setInterval(() => {
-    cacheCleaningIterator++;
-    console.log("Cache cleaned out" + cacheCleaningIterator + "times");
     if (messages.length && Date.now() - messages[messages.length - 1].createdTimestamp > 1000 * 60 * 5) {
         messages.length = 0;
         console.log("Cleaned out messages cache...");
@@ -106,39 +81,23 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
     const usersMsgs = messages.filter(msg => msg.author.id === userId);
     if (usersMsgs.length === 1)
         return;
-    if (usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp < 500) {
-        console.log(`Suspiciously fast message sent by ${message.author.displayName}`);
-        if (usersMsgs[usersMsgs.length - 1].content === usersMsgs[usersMsgs.length - 2].content) {
-            /* for (const msg of usersMsgs) {
-                if (msg.content === usersMsgs[usersMsgs.length - 1].content) {
-                    try {
-                        await msg.delete();
-                    } catch {
-                        console.log(`Failed to delete message ${msg.content} by ${msg.author.displayName}, a presumed spam bot account`)
-                    }
-                }
-            }
-            try {
-                await message.member?.kick("Compromised account, get two factor authentication before rejoining");
-            } catch {
-                const mods = await findMods(message.guild!);
-                for (const mod of mods.values()) {
-                    try {
-                        await mod.send(`I think ${message.author.displayName}'s account has been compromised but I was unable to kick them`)
-                    } catch {
-                        console.log(`Failed to dm ${mod.displayName}`);
-                    }
-                }
-            } */
-            //message.author.send(`You sent two messages in ${usersMsgs[usersMsgs.length - 1].createdTimestamp - usersMsgs[usersMsgs.length - 2].createdTimestamp} milliseconds`)
-        }
-        try {
-            //await message.author.send("That's some fast typing there")
-        }
-        catch (_a) {
-            console.log(`Failed to dm ${message.author.displayName}`);
+    const latest = usersMsgs[usersMsgs.length - 1];
+    const penultimate = usersMsgs[usersMsgs.length - 2];
+    //testing...
+    if (penultimate) {
+        console.log(`
+            
+            `);
+        console.log(`Poster: ${message.author.displayName}`);
+        console.log(`Latest message: ${latest.content}`);
+        console.log(`Penultimate message: ${penultimate.content}`);
+        console.log(`Delay: ${latest.createdTimestamp - penultimate.createdTimestamp} milliseconds`);
+        console.log("End of test");
+    }
+    if (latest.createdTimestamp - penultimate.createdTimestamp < 500) {
+        console.log(`Suspiciously fast message sent by ${message.author.displayName}; delay: ${latest.createdTimestamp - penultimate.createdTimestamp} milliseconds`);
+        if (latest.content.length > 10 && latest.content === penultimate.content) {
+            //konsultera lola om vad som bör ske
         }
     }
 }));
-//meddela nya medlemmar om att de behöver en geografisk roll
-//sparka medlemmar som inte har en geografisk roll 24 timmar efter att de gick med
