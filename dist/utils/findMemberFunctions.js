@@ -35,6 +35,6 @@ const findAllMembers = (server) => __awaiter(void 0, void 0, void 0, function* (
 exports.findAllMembers = findAllMembers;
 const findTheOne = (server) => __awaiter(void 0, void 0, void 0, function* () {
     yield server.members.fetch();
-    return server.members.cache.find(user => user.id === config_1.LOLAPAZ_ID);
+    return server.members.cache.find(user => user.id === config_1.AMY_ID);
 });
 exports.findTheOne = findTheOne;

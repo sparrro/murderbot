@@ -13,7 +13,7 @@ const config_1 = require("./config");
 const discord_js_1 = require("discord.js");
 const findMemberFunctions_1 = require("./utils/findMemberFunctions");
 const reminder = require("./utils/reminder");
-//cached stuff
+//cache
 const messages = [];
 const joins = [];
 const client = new discord_js_1.Client({
@@ -30,9 +30,21 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
     const server = client.guilds.cache.get(config_1.SERVER_ID);
     if (!server)
         return;
-    //const her = await findTheOne(server);
-    const father = yield (0, findMemberFunctions_1.findFather)(server);
-    reminder.remindHer(father, 1);
+    const her = yield (0, findMemberFunctions_1.findTheOne)(server);
+    //const father = await findFather(server);
+    reminder.remindHer(her, 1);
+    /*
+    Message cache cleaner
+    if the server becomes much more active the clearout condition should be changed
+    eg keep the most recent spam detection in some variable and clear the cache if it's more than 5 minutes old
+    or something like that
+    */
+    setInterval(() => {
+        if (messages.length && Date.now() - messages[messages.length - 1].createdTimestamp > 1000 * 60 * 5) {
+            messages.length = 0;
+            console.log("Cleaned out messages cache...");
+        }
+    }, 1000 * 60 * 15);
     /* await checkMemberRoles(server); */ //lola gör den själv
 }));
 client.login(config_1.TOKEN);
@@ -68,19 +80,7 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
     }
 }));
 //spam detector
-/*
-if the server becomes much more active the clearout condition should be changed
-eg keep the most recent spam detection in some variable and clear the cache if it's more than 5 minutes old
-or something like that
- */
-setInterval(() => {
-    if (messages.length && Date.now() - messages[messages.length - 1].createdTimestamp > 1000 * 60 * 5) {
-        messages.length = 0;
-        console.log("Cleaned out messages cache...");
-    }
-}, 1000 * 60 * 15);
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("They both work btw");
     if (message.author.bot)
         return;
     messages.push(message);
@@ -110,7 +110,11 @@ client.on("messageCreate", (message) => {
     ;
     if (message.content === "START") {
         message.reply("Oki I'll start again");
-        reminder.startAgain();
+        reminder.startAgain(client);
+    }
+    ;
+    if (message.content.includes("isn't that right")) {
+        message.reply("That's right!");
     }
     ;
 });

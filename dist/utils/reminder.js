@@ -9,25 +9,59 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const reminders_json_1 = require("../../reminders.json");
+const randomTime_1 = require("./randomTime");
+const config_1 = require("../config");
+const findMemberFunctions_1 = require("./findMemberFunctions");
+const reminderCounter = {};
+reminders_json_1.reminders.forEach(reminder => {
+    reminderCounter[reminder] = 1;
+});
+const messageGenerator = () => {
+    const randomNum = Math.floor(Math.random() * reminders_json_1.reminders.length);
+    const reminder = reminders_json_1.reminders[randomNum];
+    return {
+        count: reminder,
+        //my indentation is hideous so that hers can be perfect
+        message: `${reminder}
+
+${reminderCounter[reminder] > 1 ? `I have reminded you of this ${reminderCounter[reminder]} times since I was last rebooted and will keep doing it until you understand it yourself
+If you want me to stop just dm me STOP` : ""}
+`
+    };
+};
 class ReminderManager {
     constructor() {
         this.botherHer = true;
-        this.remindHer = (her, i) => __awaiter(this, void 0, void 0, function* () {
+        this.remindHer = (her) => __awaiter(this, void 0, void 0, function* () {
+            const time = (0, randomTime_1.randomInterval)();
             if (this.botherHer) {
-                yield her.send(String(i));
-                i++;
-                setTimeout(() => { this.remindHer(her, i); }, 1000 * 2);
+                const { message, count } = messageGenerator();
+                const bla = yield her.send(message);
+                reminderCounter[count]++;
+                console.log(her.displayName);
+                console.log(message);
+                console.log(bla);
+                setTimeout(() => { this.remindHer(her); }, time);
             }
             else {
-                setTimeout(() => { this.remindHer(her, i); }, 1000 * 2);
+                setTimeout(() => { this.remindHer(her); }, time);
             }
+            ;
         });
         this.stopBothering = () => {
             this.botherHer = false;
         };
-        this.startAgain = () => {
+        this.startAgain = (client) => __awaiter(this, void 0, void 0, function* () {
+            setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                const server = client.guilds.cache.get(config_1.SERVER_ID);
+                const her = yield (0, findMemberFunctions_1.findTheOne)(server);
+                const { message, count } = messageGenerator();
+                yield (her === null || her === void 0 ? void 0 : her.send(message));
+                reminderCounter[count]++;
+            }), 2500);
             this.botherHer = true;
-        };
+        });
     }
 }
 ;

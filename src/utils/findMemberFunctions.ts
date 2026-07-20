@@ -1,5 +1,5 @@
 import { Guild } from "discord.js";
-import { MY_ID, LOLAPAZ_ID } from "../config";
+import { MY_ID, LOLAPAZ_ID, AMY_ID } from "../config";
 export const findMods = async (server: Guild) => {
     await server.members.fetch();
 
@@ -30,5 +30,5 @@ export const findAllMembers = async (server: Guild) => {
 
 export const findTheOne = async (server: Guild) => {
     await server.members.fetch();
-    return server.members.cache.find(user => user.id === LOLAPAZ_ID);
+    return server.members.cache.find(user => user.id === AMY_ID);
 };

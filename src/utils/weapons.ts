@@ -8,7 +8,8 @@ export const quarantineUserAndAlertMods = async (user: GuildMember, message: Mes
     let timedOut: number | null | undefined;
     try {
         timedOut = (await user.timeout(1000 * 60 * 60 * 24)).communicationDisabledUntilTimestamp;
-    } catch {
+    } catch (error) {
+        console.log(error)
         const errorMsg = `Failed to quarantine ${user.displayName}`;
         console.log(errorMsg);
         await father?.send(errorMsg);
@@ -17,7 +18,8 @@ export const quarantineUserAndAlertMods = async (user: GuildMember, message: Mes
         for (const mod of mods) {
             try {
                 await mod.send(`I have put ${user.displayName} in quarantine because I believe their message ${message.content} was spam and would like a human moderator to make a final determination`);
-            } catch {
+            } catch (error) {
+                console.log(error);
                 const errorMsg = `Failed to dm mod ${mod.displayName} regarding ${user.displayName} being quarantined`;
                 console.log(errorMsg);
                 await father?.send(errorMsg);
@@ -40,7 +42,8 @@ export const demoteModerator = async (user: GuildMember) => {
         const successMsg = `Demoted ${user.displayName}`;
         console.log(successMsg);
         await father?.send(successMsg);
-    } catch {
+    } catch (error) {
+        console.log(error)
         const errorMsg = `Failed to demote ${user.displayName}`
         console.log(errorMsg);
         await father?.send(errorMsg);
@@ -51,7 +54,8 @@ export const kickUser = async (user: GuildMember, reason: string) => {
     const father = await findFather(user.guild);
     try {
         await user.kick(reason);
-    } catch {
+    } catch (error) {
+        console.log(error);
         const errorMsg = `Failed to kick ${user.displayName} for ${reason}`;
         console.log(errorMsg);
         await father?.send(errorMsg);
@@ -64,7 +68,8 @@ export const banUser = async (user: GuildMember, reason: string) => {
         await user.ban({
             reason: reason
         });
-    } catch {
+    } catch (error) {
+        console.log(error);
         const errorMsg = `Failed to ban ${user.displayName} for ${reason}`;
         console.log(errorMsg);
         await father?.send(errorMsg);

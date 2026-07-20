@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.demoteModerator = exports.quarantineUserAndAlertMods = void 0;
+exports.banUser = exports.kickUser = exports.demoteModerator = exports.quarantineUserAndAlertMods = void 0;
 const findMemberFunctions_1 = require("./findMemberFunctions");
 const config_1 = require("../config");
 const quarantineUserAndAlertMods = (user, message) => __awaiter(void 0, void 0, void 0, function* () {
@@ -19,7 +19,8 @@ const quarantineUserAndAlertMods = (user, message) => __awaiter(void 0, void 0, 
     try {
         timedOut = (yield user.timeout(1000 * 60 * 60 * 24)).communicationDisabledUntilTimestamp;
     }
-    catch (_a) {
+    catch (error) {
+        console.log(error);
         const errorMsg = `Failed to quarantine ${user.displayName}`;
         console.log(errorMsg);
         yield (father === null || father === void 0 ? void 0 : father.send(errorMsg));
@@ -30,7 +31,8 @@ const quarantineUserAndAlertMods = (user, message) => __awaiter(void 0, void 0, 
             try {
                 yield mod.send(`I have put ${user.displayName} in quarantine because I believe their message ${message.content} was spam and would like a human moderator to make a final determination`);
             }
-            catch (_b) {
+            catch (error) {
+                console.log(error);
                 const errorMsg = `Failed to dm mod ${mod.displayName} regarding ${user.displayName} being quarantined`;
                 console.log(errorMsg);
                 yield (father === null || father === void 0 ? void 0 : father.send(errorMsg));
@@ -58,7 +60,8 @@ const demoteModerator = (user) => __awaiter(void 0, void 0, void 0, function* ()
         console.log(successMsg);
         yield (father === null || father === void 0 ? void 0 : father.send(successMsg));
     }
-    catch (_a) {
+    catch (error) {
+        console.log(error);
         const errorMsg = `Failed to demote ${user.displayName}`;
         console.log(errorMsg);
         yield (father === null || father === void 0 ? void 0 : father.send(errorMsg));
@@ -66,27 +69,34 @@ const demoteModerator = (user) => __awaiter(void 0, void 0, void 0, function* ()
     ;
 });
 exports.demoteModerator = demoteModerator;
-/* export const kickUser = async (user: GuildMember, reason: string) => {
-    const father = await findFather(user.guild);
+const kickUser = (user, reason) => __awaiter(void 0, void 0, void 0, function* () {
+    const father = yield (0, findMemberFunctions_1.findFather)(user.guild);
     try {
-        await user.kick(reason);
-    } catch {
+        yield user.kick(reason);
+    }
+    catch (error) {
+        console.log(error);
         const errorMsg = `Failed to kick ${user.displayName} for ${reason}`;
         console.log(errorMsg);
-        await father?.send(errorMsg);
-    };
-};
-
-export const banUser = async (user: GuildMember, reason: string) => {
-    const father = await findFather(user.guild);
+        yield (father === null || father === void 0 ? void 0 : father.send(errorMsg));
+    }
+    ;
+});
+exports.kickUser = kickUser;
+const banUser = (user, reason) => __awaiter(void 0, void 0, void 0, function* () {
+    const father = yield (0, findMemberFunctions_1.findFather)(user.guild);
     try {
-        await user.ban({
+        yield user.ban({
             reason: reason
         });
-    } catch {
+    }
+    catch (error) {
+        console.log(error);
         const errorMsg = `Failed to ban ${user.displayName} for ${reason}`;
         console.log(errorMsg);
-        await father?.send(errorMsg);
-    };
-}; */
+        yield (father === null || father === void 0 ? void 0 : father.send(errorMsg));
+    }
+    ;
+});
+exports.banUser = banUser;
 //to add: demote all but trusted moderators; quarantine whole server
