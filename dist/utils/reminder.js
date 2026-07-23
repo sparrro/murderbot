@@ -22,7 +22,7 @@ const messageGenerator = () => {
     const reminder = reminders_json_1.reminders[randomNum];
     return {
         count: reminder,
-        //my indentation is hideous so that hers can be perfect
+        //my indentation looks like this so that hers can look like this
         message: `${reminder}
 
 ${reminderCounter[reminder] > 1 ? `I have reminded you of this ${reminderCounter[reminder]} times since I was last rebooted and will keep doing it until you understand it yourself
@@ -33,21 +33,19 @@ If you want me to stop just dm me STOP` : ""}
 class ReminderManager {
     constructor() {
         this.botherHer = true;
+        this.counter = 1;
         this.remindHer = (her) => __awaiter(this, void 0, void 0, function* () {
             const time = (0, randomTime_1.randomInterval)();
-            if (this.botherHer) {
+            if (this.botherHer && this.counter > 1) {
                 const { message, count } = messageGenerator();
-                const bla = yield her.send(message);
+                yield her.send(message);
+                console.log("Reminder sent: " + message);
                 reminderCounter[count]++;
-                console.log(her.displayName);
-                console.log(message);
-                console.log(bla);
-                setTimeout(() => { this.remindHer(her); }, time);
-            }
-            else {
-                setTimeout(() => { this.remindHer(her); }, time);
             }
             ;
+            this.counter++;
+            console.log("Current time is " + (new Date().toLocaleString()) + ", next reminder to be sent in approximately " + (time / 1000 / 60 / 60).toPrecision(4) + " hours");
+            setTimeout(() => { this.remindHer(her); }, time);
         });
         this.stopBothering = () => {
             this.botherHer = false;

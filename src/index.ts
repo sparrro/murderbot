@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, LOLAPAZ_ID, MY_ID } from "./config"; 
+import { TOKEN, SERVER_ID, LOLAPAZ_ID, MY_ID, AMY_ID } from "./config"; 
 import { Client, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
@@ -120,7 +120,7 @@ client.on("messageCreate", async (message) => {
 
 client.on("messageCreate", (message) => {
     if (message.guild) return;
-    if (message.author.id != MY_ID) return;
+    if (message.author.id != AMY_ID) return;
     if (message.content === "STOP") {
         message.reply("Oki I'll stop. If you ever want me to start again, just dm me START");
         reminder.stopBothering();

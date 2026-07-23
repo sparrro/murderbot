@@ -25,13 +25,17 @@ If you want me to stop just dm me STOP` : ""}
 
 class ReminderManager {
     botherHer = true;
+    counter = 1;
     remindHer = async (her: GuildMember) => {
         const time = randomInterval();
-        if (this.botherHer) {
+        if (this.botherHer && this.counter > 1) {
             const { message, count } = messageGenerator();
             await her.send(message);
+            console.log("Reminder sent: " + message);
             reminderCounter[count]++;
         };
+        this.counter++;
+        console.log("Current time is " + (new Date().toLocaleString()) + ", next reminder to be sent in approximately " + (time / 1000 / 60 / 60).toPrecision(4) + " hours")
         setTimeout(() => { this.remindHer(her) }, time);
     };
     stopBothering = () => {

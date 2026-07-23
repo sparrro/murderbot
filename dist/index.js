@@ -58,9 +58,11 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
         console.log(joins);
         joins.shift();
     }
+    ;
     if (joins.length > 0) {
         console.log("Just confirming the raid detector works... ", `Joins in last 30 seconds: ${joins.length}...`);
     }
+    ;
     if (joins.length >= 10) {
         const mods = yield (0, findMemberFunctions_1.findMods)(guild);
         for (const mod of mods) {
@@ -70,14 +72,19 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
             catch (_a) {
                 console.log(`Failed to DM ${mod}`);
             }
+            ;
         }
+        ;
     }
+    ;
     if (joins.length >= 25) {
         //konsultera lola
     }
+    ;
     if (joins.length >= 50) {
         //konsultera lola
     }
+    ;
 }));
 //spam detector
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
@@ -95,13 +102,14 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         if (latest.content.length > 10 && latest.content === penultimate.content) {
             //konsultera lola om vad som bör ske
         }
+        ;
     }
     ;
 }));
 client.on("messageCreate", (message) => {
     if (message.guild)
         return;
-    if (message.author.id != config_1.MY_ID)
+    if (message.author.id != config_1.AMY_ID)
         return;
     if (message.content === "STOP") {
         message.reply("Oki I'll stop. If you ever want me to start again, just dm me START");
