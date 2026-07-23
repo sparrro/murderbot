@@ -1,15 +1,16 @@
 import { TOKEN, SERVER_ID, LOLAPAZ_ID, MY_ID, AMY_ID } from "./config"; 
-import { Client, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
+import { Client, Collection, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
     findAllMembers,
     findByUsername,
     findTheOne,
     findFather
- } from "./utils/findMemberFunctions";
+} from "./utils/findMemberFunctions";
 import { checkMemberRoles } from "./utils/checkMemberRoles";
 import { randomInterval } from "./utils/randomTime";
-const reminder = require("./utils/reminder")
+//const reminder = require("./utils/reminder");
+import reminder from "./utils/reminder";
 
 //cache
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
@@ -33,7 +34,7 @@ client.once("clientReady", async () => {
 
     const her = await findTheOne(server);
     //const father = await findFather(server);
-    reminder.remindHer(her, 1);
+    reminder.remindHer(her!);
 
     /*
     Message cache cleaner
@@ -133,3 +134,11 @@ client.on("messageCreate", (message) => {
         message.reply("That's right!");
     };
 });
+
+client.on("messageCreate", async (message) => {
+    if (message.guild) return;
+    if (message.author.id != (AMY_ID || MY_ID)) return;
+    if (message.content.toLowerCase().includes("demote")) {
+        //continue tomorrow
+    }
+})
