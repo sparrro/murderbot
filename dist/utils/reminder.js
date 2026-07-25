@@ -36,7 +36,7 @@ class ReminderManager {
         this.counter = 1;
         this.remindHer = (her) => __awaiter(this, void 0, void 0, function* () {
             const time = (0, randomTime_1.randomInterval)();
-            if (this.botherHer && this.counter > 1) {
+            if (this.botherHer) {
                 const { message, count } = messageGenerator();
                 yield her.send(message);
                 console.log("Reminder sent: " + message);
@@ -63,4 +63,4 @@ class ReminderManager {
     }
 }
 ;
-module.exports = new ReminderManager();
+exports.default = new ReminderManager();

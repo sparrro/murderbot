@@ -28,7 +28,7 @@ class ReminderManager {
     counter = 1;
     remindHer = async (her: GuildMember) => {
         const time = randomInterval();
-        if (this.botherHer && this.counter > 1) {
+        if (this.botherHer) {
             const { message, count } = messageGenerator();
             await her.send(message);
             console.log("Reminder sent: " + message);

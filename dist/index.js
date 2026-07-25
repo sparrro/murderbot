@@ -8,11 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
 const discord_js_1 = require("discord.js");
 const findMemberFunctions_1 = require("./utils/findMemberFunctions");
-const reminder = require("./utils/reminder");
+//const reminder = require("./utils/reminder");
+const reminder_1 = __importDefault(require("./utils/reminder"));
 //cache
 const messages = [];
 const joins = [];
@@ -32,7 +36,7 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
         return;
     const her = yield (0, findMemberFunctions_1.findTheOne)(server);
     //const father = await findFather(server);
-    reminder.remindHer(her, 1);
+    reminder_1.default.remindHer(her);
     /*
     Message cache cleaner
     if the server becomes much more active the clearout condition should be changed
@@ -113,12 +117,12 @@ client.on("messageCreate", (message) => {
         return;
     if (message.content === "STOP") {
         message.reply("Oki I'll stop. If you ever want me to start again, just dm me START");
-        reminder.stopBothering();
+        reminder_1.default.stopBothering();
     }
     ;
     if (message.content === "START") {
         message.reply("Oki I'll start again");
-        reminder.startAgain(client);
+        reminder_1.default.startAgain(client);
     }
     ;
     if (message.content.includes("isn't that right")) {
@@ -126,3 +130,12 @@ client.on("messageCreate", (message) => {
     }
     ;
 });
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.guild)
+        return;
+    if (message.author.id != (config_1.AMY_ID || config_1.MY_ID))
+        return;
+    if (message.content.toLowerCase().includes("demote")) {
+        //continue tomorrow
+    }
+}));
