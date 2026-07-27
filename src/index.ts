@@ -125,11 +125,11 @@ client.on("messageCreate", async (message) => {
 client.on("messageCreate", (message) => {
     if (message.guild) return;
     if (message.author.id != AMY_ID) return;
-    if (message.content === "STOP") {
-        message.reply("Oki I'll stop. If you ever want me to start again, just dm me START");
+    if (message.content.toLowerCase() === "stop") {
+        message.reply(`Oki I'll stop. If you ever want me to start again, just dm me "start"`);
         reminder.stopBothering();
     };
-    if (message.content === "START") {
+    if (message.content.toLowerCase() === "start") {
         message.reply("Oki I'll start again");
         reminder.startAgain(client);
     };

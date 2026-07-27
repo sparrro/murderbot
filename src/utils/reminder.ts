@@ -18,7 +18,7 @@ const messageGenerator = () => {
         message: `${reminder}
 
 ${reminderCounter[reminder] > 1 ? `I have reminded you of this ${reminderCounter[reminder]} times since I was last rebooted and will keep doing it until you understand it yourself
-If you want me to stop just dm me STOP` : ""}
+If you want me to stop just dm me "stop"` : ""}
 `
     }
 };
