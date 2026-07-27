@@ -12,7 +12,7 @@ import { checkMemberRoles } from "./utils/checkMemberRoles";
 import { randomInterval } from "./utils/randomTime";
 //const reminder = require("./utils/reminder");
 import reminder from "./utils/reminder";
-import { demoteModerator } from "./utils/weapons";
+import { banUser, demoteModerator, kickUser } from "./utils/weapons";
 import demote from "./commands/demote";
 
 //cache
@@ -141,37 +141,43 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", async (message) => {
     if (message.guild) return;
     if (message.author.id != (AMY_ID || MY_ID || LOLAPAZ_ID)) return;
+    await client.guilds.fetch();
+    const server = client.guilds.cache.get(SERVER_ID!);
+    if (!server) {
+        console.log("Couldn't find server");
+        return;
+    };
     if (message.content.toLowerCase().includes("demote")) {
         if (message.content.toLowerCase().includes("gloo")) {
-            const gloo = await findById(message.guild!, GLOO_ID!);
+            const gloo = await findById(server, GLOO_ID!);
             if (!gloo) {
                 console.log("Failed to demote Gloo");
                 return;
             };
             await demoteModerator(gloo)
         } else if (message.content.toLowerCase().includes("lyko")) {
-            const lykophos = await findById(message.guild!, LYKOPHOS_ID!);
+            const lykophos = await findById(server, LYKOPHOS_ID!);
             if (!lykophos) {
                 console.log("Failed to demote Lykophos");
                 return;
             };
             await demoteModerator(lykophos);
         } else if (message.content.toLowerCase().includes("namire")) {
-            const namire = await findById(message.guild!, NAMIRE_ID!);
+            const namire = await findById(server, NAMIRE_ID!);
             if (!namire) {
                 console.log("Failed to demote Namire");
                 return;
             };
             await demoteModerator(namire);
         } else if (message.content.toLowerCase().includes("teem")) {
-            const teemothee = await findById(message.guild!, TEEMOTHEE_ID!);
+            const teemothee = await findById(server, TEEMOTHEE_ID!);
             if (!teemothee) {
                 console.log("Failed to demote Teemothee");
                 return;
             };
             await demoteModerator(teemothee);
         } else if (message.content.toLowerCase().includes("spar")) {
-            const sparrro = await findById(message.guild!, MY_ID!);
+            const sparrro = await findById(server, MY_ID!);
             if (!sparrro) {
                 console.log("Failed to demote Sparrro");
                 return;
@@ -179,5 +185,23 @@ client.on("messageCreate", async (message) => {
             await demoteModerator(sparrro);
             console.log("Demotion succesful")
         };
+    };
+});
+
+client.on("messageCreate", async (message) => {
+    if (message.guild) return;
+    if (message.author.id != MY_ID) return;
+    await client.guilds.fetch();
+    const server = client.guilds.cache.get(SERVER_ID!);
+    if (!server) {
+        console.log("Couldn't find server");
+        return;
+    };
+    const father = await findFather(server);
+    if (message.content.toLowerCase().includes("kick me")) {
+        await kickUser(father!, "Kicking succesful");
+    };
+    if (message.content.toLowerCase().includes("ban me")) {
+        await banUser(father!, "Banning succesful");
     };
 });
