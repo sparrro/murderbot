@@ -1,16 +1,19 @@
-import { TOKEN, SERVER_ID, LOLAPAZ_ID, MY_ID, AMY_ID } from "./config"; 
+import { TOKEN, SERVER_ID, LOLAPAZ_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID } from "./config"; 
 import { Client, Collection, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
     findAllMembers,
     findByUsername,
     findTheOne,
-    findFather
+    findFather,
+    findById
 } from "./utils/findMemberFunctions";
 import { checkMemberRoles } from "./utils/checkMemberRoles";
 import { randomInterval } from "./utils/randomTime";
 //const reminder = require("./utils/reminder");
 import reminder from "./utils/reminder";
+import { demoteModerator } from "./utils/weapons";
+import demote from "./commands/demote";
 
 //cache
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
@@ -137,8 +140,44 @@ client.on("messageCreate", (message) => {
 
 client.on("messageCreate", async (message) => {
     if (message.guild) return;
-    if (message.author.id != (AMY_ID || MY_ID)) return;
+    if (message.author.id != (AMY_ID || MY_ID || LOLAPAZ_ID)) return;
     if (message.content.toLowerCase().includes("demote")) {
-        //continue tomorrow
-    }
-})
+        if (message.content.toLowerCase().includes("gloo")) {
+            const gloo = await findById(message.guild!, GLOO_ID!);
+            if (!gloo) {
+                console.log("Failed to demote Gloo");
+                return;
+            };
+            await demoteModerator(gloo)
+        } else if (message.content.toLowerCase().includes("lyko")) {
+            const lykophos = await findById(message.guild!, LYKOPHOS_ID!);
+            if (!lykophos) {
+                console.log("Failed to demote Lykophos");
+                return;
+            };
+            await demoteModerator(lykophos);
+        } else if (message.content.toLowerCase().includes("namire")) {
+            const namire = await findById(message.guild!, NAMIRE_ID!);
+            if (!namire) {
+                console.log("Failed to demote Namire");
+                return;
+            };
+            await demoteModerator(namire);
+        } else if (message.content.toLowerCase().includes("teem")) {
+            const teemothee = await findById(message.guild!, TEEMOTHEE_ID!);
+            if (!teemothee) {
+                console.log("Failed to demote Teemothee");
+                return;
+            };
+            await demoteModerator(teemothee);
+        } else if (message.content.toLowerCase().includes("spar")) {
+            const sparrro = await findById(message.guild!, MY_ID!);
+            if (!sparrro) {
+                console.log("Failed to demote Sparrro");
+                return;
+            };
+            await demoteModerator(sparrro);
+            console.log("Demotion succesful")
+        };
+    };
+});

@@ -18,6 +18,12 @@ export const findByUsername = async (server: Guild, username: string) => {
     return server.members.cache.filter(member => member.user.username === username).first();
 };
 
+export const findById = async (server: Guild, id: string) => {
+    await server.members.fetch();
+
+    return server.members.cache.filter(member => member.user.id === id).first();
+};
+
 export const findFather = async (server: Guild) => {
     await server.members.fetch();
     return server.members.cache.find(user => user.id === MY_ID);
