@@ -1,10 +1,10 @@
 import { Guild, GuildMember, Message, RoleResolvable } from "discord.js";
 import { findByUsername, findFather, findMods } from "./findMemberFunctions";
-import { MODROLE_ID } from "../config";
+import { MODROLE_ID, MY_ID } from "../config";
 
 export const quarantineUserAndAlertMods = async (user: GuildMember, message: Message) => {
     const mods = await findMods(user.guild);
-    const father = await findFather(user.guild);
+    const father = user.guild.members.cache.get(MY_ID!);
     let timedOut: number | null | undefined;
     try {
         timedOut = (await user.timeout(1000 * 60 * 60 * 24)).communicationDisabledUntilTimestamp;
@@ -28,8 +28,8 @@ export const quarantineUserAndAlertMods = async (user: GuildMember, message: Mes
     };
 };
 
-export const demoteModerator = async (user: GuildMember) => {
-    const father = await findFather(user.guild);
+export const demoteModerator = async (user: GuildMember, server: Guild) => {
+    const father = server.members.cache.get(MY_ID!);
     const isModerator = user.roles.cache.some(role => role.id == MODROLE_ID);
     if (!isModerator) {
         const errorMsg = `${user.displayName} is already not a moderator`;
@@ -51,7 +51,7 @@ export const demoteModerator = async (user: GuildMember) => {
 };
 
 export const kickUser = async (user: GuildMember, reason: string) => {
-    const father = await findFather(user.guild);
+    const father = user.guild.members.cache.get(MY_ID!);
     try {
         await user.kick(reason);
     } catch (error) {
@@ -63,7 +63,7 @@ export const kickUser = async (user: GuildMember, reason: string) => {
 };
 
 export const banUser = async (user: GuildMember, reason: string) => {
-    const father = await findFather(user.guild);
+    const father = user.guild.members.cache.get(MY_ID!);
     try {
         await user.ban({
             reason: reason

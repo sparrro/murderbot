@@ -14,7 +14,7 @@ const findMemberFunctions_1 = require("./findMemberFunctions");
 const config_1 = require("../config");
 const quarantineUserAndAlertMods = (user, message) => __awaiter(void 0, void 0, void 0, function* () {
     const mods = yield (0, findMemberFunctions_1.findMods)(user.guild);
-    const father = yield (0, findMemberFunctions_1.findFather)(user.guild);
+    const father = user.guild.members.cache.get(config_1.MY_ID);
     let timedOut;
     try {
         timedOut = (yield user.timeout(1000 * 60 * 60 * 24)).communicationDisabledUntilTimestamp;
@@ -44,8 +44,8 @@ const quarantineUserAndAlertMods = (user, message) => __awaiter(void 0, void 0, 
     ;
 });
 exports.quarantineUserAndAlertMods = quarantineUserAndAlertMods;
-const demoteModerator = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    const father = yield (0, findMemberFunctions_1.findFather)(user.guild);
+const demoteModerator = (user, server) => __awaiter(void 0, void 0, void 0, function* () {
+    const father = server.members.cache.get(config_1.MY_ID);
     const isModerator = user.roles.cache.some(role => role.id == config_1.MODROLE_ID);
     if (!isModerator) {
         const errorMsg = `${user.displayName} is already not a moderator`;
@@ -70,7 +70,7 @@ const demoteModerator = (user) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.demoteModerator = demoteModerator;
 const kickUser = (user, reason) => __awaiter(void 0, void 0, void 0, function* () {
-    const father = yield (0, findMemberFunctions_1.findFather)(user.guild);
+    const father = user.guild.members.cache.get(config_1.MY_ID);
     try {
         yield user.kick(reason);
     }
@@ -84,7 +84,7 @@ const kickUser = (user, reason) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.kickUser = kickUser;
 const banUser = (user, reason) => __awaiter(void 0, void 0, void 0, function* () {
-    const father = yield (0, findMemberFunctions_1.findFather)(user.guild);
+    const father = user.guild.members.cache.get(config_1.MY_ID);
     try {
         yield user.ban({
             reason: reason

@@ -28,16 +28,20 @@ const client = new discord_js_1.Client({
         discord_js_1.GatewayIntentBits.GuildMessages,
         discord_js_1.GatewayIntentBits.MessageContent,
         discord_js_1.GatewayIntentBits.DirectMessages
-    ]
+    ],
 });
 client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Logged in as ${client.user.tag}`);
     const server = client.guilds.cache.get(config_1.SERVER_ID);
     if (!server)
         return;
-    const her = yield (0, findMemberFunctions_1.findTheOne)(server);
-    //const father = await findFather(server);
-    reminder_1.default.remindHer(her);
+    yield server.members.fetch();
+    const her = server.members.cache.get(config_1.AMY_ID);
+    console.log(config_1.AMY_ID);
+    console.log(her);
+    //reminder.remindHer(her!);
+    const father = server.members.cache.get(config_1.MY_ID);
+    yield (father === null || father === void 0 ? void 0 : father.send("I'm online"));
     /*
     Message cache cleaner
     if the server becomes much more active the clearout condition should be changed
@@ -126,75 +130,7 @@ client.on("messageCreate", (message) => {
         reminder_1.default.startAgain(client);
     }
     ;
-    if (message.content.includes("isn't that right")) {
-        message.reply("That's right!");
-    }
-    ;
 });
-client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
-    if (message.guild)
-        return;
-    if (message.author.id != (config_1.AMY_ID || config_1.MY_ID || config_1.LOLAPAZ_ID))
-        return;
-    yield client.guilds.fetch();
-    const server = client.guilds.cache.get(config_1.SERVER_ID);
-    if (!server) {
-        console.log("Couldn't find server");
-        return;
-    }
-    ;
-    if (message.content.toLowerCase().includes("demote")) {
-        console.log("demotion request detected");
-        if (message.content.toLowerCase().includes("gloo")) {
-            const gloo = yield (0, findMemberFunctions_1.findById)(server, config_1.GLOO_ID);
-            if (!gloo) {
-                console.log("Failed to demote Gloo");
-                return;
-            }
-            ;
-            yield (0, weapons_1.demoteModerator)(gloo);
-        }
-        else if (message.content.toLowerCase().includes("lyko")) {
-            const lykophos = yield (0, findMemberFunctions_1.findById)(server, config_1.LYKOPHOS_ID);
-            if (!lykophos) {
-                console.log("Failed to demote Lykophos");
-                return;
-            }
-            ;
-            yield (0, weapons_1.demoteModerator)(lykophos);
-        }
-        else if (message.content.toLowerCase().includes("namire")) {
-            const namire = yield (0, findMemberFunctions_1.findById)(server, config_1.NAMIRE_ID);
-            if (!namire) {
-                console.log("Failed to demote Namire");
-                return;
-            }
-            ;
-            yield (0, weapons_1.demoteModerator)(namire);
-        }
-        else if (message.content.toLowerCase().includes("teem")) {
-            const teemothee = yield (0, findMemberFunctions_1.findById)(server, config_1.TEEMOTHEE_ID);
-            if (!teemothee) {
-                console.log("Failed to demote Teemothee");
-                return;
-            }
-            ;
-            yield (0, weapons_1.demoteModerator)(teemothee);
-        }
-        else if (message.content.toLowerCase().includes("spar")) {
-            const sparrro = yield (0, findMemberFunctions_1.findById)(server, config_1.MY_ID);
-            if (!sparrro) {
-                console.log("Failed to demote Sparrro");
-                return;
-            }
-            ;
-            yield (0, weapons_1.demoteModerator)(sparrro);
-            console.log("Demotion succesful");
-        }
-        ;
-    }
-    ;
-}));
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
     if (message.guild)
         return;
@@ -207,13 +143,57 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         return;
     }
     ;
-    const father = yield (0, findMemberFunctions_1.findFather)(server);
+    if (message.content.toLowerCase().includes("demote")) {
+        let id;
+        if (message.content.toLowerCase().includes("gloo")) {
+            id = config_1.GLOO_ID;
+        }
+        else if (message.content.toLowerCase().includes("lyko")) {
+            id = config_1.LYKOPHOS_ID;
+        }
+        else if (message.content.toLowerCase().includes("namire")) {
+            id = config_1.NAMIRE_ID;
+        }
+        else if (message.content.toLowerCase().includes("teem")) {
+            id = config_1.TEEMOTHEE_ID;
+        }
+        else if (message.content.toLowerCase().includes("spar")) {
+            id = config_1.MY_ID;
+        }
+        ;
+        if (!id)
+            return;
+        const mod = server.members.cache.get(id);
+        console.log(mod === null || mod === void 0 ? void 0 : mod.displayName);
+        //await demoteModerator(mod!, server);
+    }
+    ;
+}));
+//tests for kicking and banning
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.guild)
+        return;
+    if (message.author.id != config_1.MY_ID)
+        return;
+    const server = client.guilds.cache.get(config_1.SERVER_ID);
+    if (!server) {
+        console.log("Couldn't find server");
+        return;
+    }
+    ;
+    const father = server.members.cache.get(config_1.MY_ID);
     if (message.content.toLowerCase().includes("kick me")) {
         yield (0, weapons_1.kickUser)(father, "Kicking succesful");
     }
     ;
     if (message.content.toLowerCase().includes("ban me")) {
         yield (0, weapons_1.banUser)(father, "Banning succesful");
+    }
+    ;
+}));
+client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
+    if (member.id === config_1.QATARI_ID) {
+        yield (0, weapons_1.banUser)(member, "You're not welcome back unless you apologise to Lola first");
     }
     ;
 }));
