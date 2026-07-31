@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, LOLAPAZ_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID } from "./config"; 
+import { TOKEN, SERVER_ID, LOLAPAZ_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID } from "./config"; 
 import { Client, Collection, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
@@ -148,6 +148,7 @@ client.on("messageCreate", async (message) => {
         return;
     };
     if (message.content.toLowerCase().includes("demote")) {
+        console.log("demotion request detected")
         if (message.content.toLowerCase().includes("gloo")) {
             const gloo = await findById(server, GLOO_ID!);
             if (!gloo) {
@@ -188,6 +189,7 @@ client.on("messageCreate", async (message) => {
     };
 });
 
+//tests for kicking and banning
 client.on("messageCreate", async (message) => {
     if (message.guild) return;
     if (message.author.id != MY_ID) return;
@@ -203,5 +205,11 @@ client.on("messageCreate", async (message) => {
     };
     if (message.content.toLowerCase().includes("ban me")) {
         await banUser(father!, "Banning succesful");
+    };
+});
+
+client.on("guildMemberAdd", async (member) => {
+    if (member.id === QATARI_ID) {
+        await banUser(member, "You're not welcome back unless you apologise to Lola first");
     };
 });

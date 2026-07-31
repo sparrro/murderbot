@@ -17,6 +17,7 @@ const discord_js_1 = require("discord.js");
 const findMemberFunctions_1 = require("./utils/findMemberFunctions");
 //const reminder = require("./utils/reminder");
 const reminder_1 = __importDefault(require("./utils/reminder"));
+const weapons_1 = require("./utils/weapons");
 //cache
 const messages = [];
 const joins = [];
@@ -115,12 +116,12 @@ client.on("messageCreate", (message) => {
         return;
     if (message.author.id != config_1.AMY_ID)
         return;
-    if (message.content === "STOP") {
-        message.reply("Oki I'll stop. If you ever want me to start again, just dm me START");
+    if (message.content.toLowerCase() === "stop") {
+        message.reply(`Oki I'll stop. If you ever want me to start again, just dm me "start"`);
         reminder_1.default.stopBothering();
     }
     ;
-    if (message.content === "START") {
+    if (message.content.toLowerCase() === "start") {
         message.reply("Oki I'll start again");
         reminder_1.default.startAgain(client);
     }
@@ -133,9 +134,86 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
     if (message.guild)
         return;
-    if (message.author.id != (config_1.AMY_ID || config_1.MY_ID))
+    if (message.author.id != (config_1.AMY_ID || config_1.MY_ID || config_1.LOLAPAZ_ID))
         return;
-    if (message.content.toLowerCase().includes("demote")) {
-        //continue tomorrow
+    yield client.guilds.fetch();
+    const server = client.guilds.cache.get(config_1.SERVER_ID);
+    if (!server) {
+        console.log("Couldn't find server");
+        return;
     }
+    ;
+    if (message.content.toLowerCase().includes("demote")) {
+        console.log("demotion request detected");
+        if (message.content.toLowerCase().includes("gloo")) {
+            const gloo = yield (0, findMemberFunctions_1.findById)(server, config_1.GLOO_ID);
+            if (!gloo) {
+                console.log("Failed to demote Gloo");
+                return;
+            }
+            ;
+            yield (0, weapons_1.demoteModerator)(gloo);
+        }
+        else if (message.content.toLowerCase().includes("lyko")) {
+            const lykophos = yield (0, findMemberFunctions_1.findById)(server, config_1.LYKOPHOS_ID);
+            if (!lykophos) {
+                console.log("Failed to demote Lykophos");
+                return;
+            }
+            ;
+            yield (0, weapons_1.demoteModerator)(lykophos);
+        }
+        else if (message.content.toLowerCase().includes("namire")) {
+            const namire = yield (0, findMemberFunctions_1.findById)(server, config_1.NAMIRE_ID);
+            if (!namire) {
+                console.log("Failed to demote Namire");
+                return;
+            }
+            ;
+            yield (0, weapons_1.demoteModerator)(namire);
+        }
+        else if (message.content.toLowerCase().includes("teem")) {
+            const teemothee = yield (0, findMemberFunctions_1.findById)(server, config_1.TEEMOTHEE_ID);
+            if (!teemothee) {
+                console.log("Failed to demote Teemothee");
+                return;
+            }
+            ;
+            yield (0, weapons_1.demoteModerator)(teemothee);
+        }
+        else if (message.content.toLowerCase().includes("spar")) {
+            const sparrro = yield (0, findMemberFunctions_1.findById)(server, config_1.MY_ID);
+            if (!sparrro) {
+                console.log("Failed to demote Sparrro");
+                return;
+            }
+            ;
+            yield (0, weapons_1.demoteModerator)(sparrro);
+            console.log("Demotion succesful");
+        }
+        ;
+    }
+    ;
+}));
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.guild)
+        return;
+    if (message.author.id != config_1.MY_ID)
+        return;
+    yield client.guilds.fetch();
+    const server = client.guilds.cache.get(config_1.SERVER_ID);
+    if (!server) {
+        console.log("Couldn't find server");
+        return;
+    }
+    ;
+    const father = yield (0, findMemberFunctions_1.findFather)(server);
+    if (message.content.toLowerCase().includes("kick me")) {
+        yield (0, weapons_1.kickUser)(father, "Kicking succesful");
+    }
+    ;
+    if (message.content.toLowerCase().includes("ban me")) {
+        yield (0, weapons_1.banUser)(father, "Banning succesful");
+    }
+    ;
 }));

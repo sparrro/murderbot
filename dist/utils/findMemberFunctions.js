@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findTheOne = exports.findAllMembers = exports.findFather = exports.findByUsername = exports.findMods = void 0;
+exports.findTheEnemy = exports.findTheOne = exports.findAllMembers = exports.findFather = exports.findById = exports.findByUsername = exports.findMods = void 0;
 const config_1 = require("../config");
 const findMods = (server) => __awaiter(void 0, void 0, void 0, function* () {
     yield server.members.fetch();
@@ -23,6 +23,11 @@ const findByUsername = (server, username) => __awaiter(void 0, void 0, void 0, f
     return server.members.cache.filter(member => member.user.username === username).first();
 });
 exports.findByUsername = findByUsername;
+const findById = (server, id) => __awaiter(void 0, void 0, void 0, function* () {
+    yield server.members.fetch();
+    return server.members.cache.filter(member => member.user.id === id).first();
+});
+exports.findById = findById;
 const findFather = (server) => __awaiter(void 0, void 0, void 0, function* () {
     yield server.members.fetch();
     return server.members.cache.find(user => user.id === config_1.MY_ID);
@@ -38,3 +43,8 @@ const findTheOne = (server) => __awaiter(void 0, void 0, void 0, function* () {
     return server.members.cache.find(user => user.id === config_1.AMY_ID);
 });
 exports.findTheOne = findTheOne;
+const findTheEnemy = (server) => __awaiter(void 0, void 0, void 0, function* () {
+    yield server.members.fetch();
+    return server.members.cache.find(user => user.id === config_1.ENEMY_ID);
+});
+exports.findTheEnemy = findTheEnemy;
