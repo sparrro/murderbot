@@ -20,6 +20,8 @@ const client = new Client({
     ],
 });
 
+console.log("test 1")
+
 client.once("clientReady", async () => {
     console.log(`Logged in as ${client.user!.tag}`);
 
