@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("./config");
 const discord_js_1 = require("discord.js");
 const findMemberFunctions_1 = require("./utils/findMemberFunctions");
-//const reminder = require("./utils/reminder");
 const reminder_1 = __importDefault(require("./utils/reminder"));
 const weapons_1 = require("./utils/weapons");
 //cache
@@ -37,9 +36,7 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
         return;
     yield server.members.fetch();
     const her = server.members.cache.get(config_1.AMY_ID);
-    console.log(config_1.AMY_ID);
-    console.log(her);
-    //reminder.remindHer(her!);
+    reminder_1.default.remindHer(her);
     const father = server.members.cache.get(config_1.MY_ID);
     yield (father === null || father === void 0 ? void 0 : father.send("I'm online"));
     /*
@@ -157,39 +154,36 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         else if (message.content.toLowerCase().includes("teem")) {
             id = config_1.TEEMOTHEE_ID;
         }
-        else if (message.content.toLowerCase().includes("spar")) {
-            id = config_1.MY_ID;
-        }
         ;
         if (!id)
             return;
         const mod = server.members.cache.get(id);
         console.log(mod === null || mod === void 0 ? void 0 : mod.displayName);
-        //await demoteModerator(mod!, server);
+        yield (0, weapons_1.demoteModerator)(mod, server);
     }
     ;
 }));
-//tests for kicking and banning
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
     if (message.guild)
         return;
     if (message.author.id != config_1.MY_ID)
         return;
+    if (message.content != "do it")
+        return;
     const server = client.guilds.cache.get(config_1.SERVER_ID);
-    if (!server) {
-        console.log("Couldn't find server");
+    const her = server === null || server === void 0 ? void 0 : server.members.cache.get(config_1.AMY_ID);
+    if (!her) {
+        console.log("need to fetch members cache");
         return;
     }
     ;
-    const father = server.members.cache.get(config_1.MY_ID);
-    if (message.content.toLowerCase().includes("kick me")) {
-        yield (0, weapons_1.kickUser)(father, "Kicking succesful");
+    const modRole = server === null || server === void 0 ? void 0 : server.roles.cache.get(config_1.MODROLE_ID);
+    if (!modRole) {
+        console.log("need to fetch roles cache");
+        return;
     }
     ;
-    if (message.content.toLowerCase().includes("ban me")) {
-        yield (0, weapons_1.banUser)(father, "Banning succesful");
-    }
-    ;
+    yield her.roles.add(modRole);
 }));
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
     if (member.id === config_1.QATARI_ID) {

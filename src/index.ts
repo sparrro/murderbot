@@ -1,19 +1,10 @@
-import { TOKEN, SERVER_ID, LOLAPAZ_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID } from "./config"; 
-import { Client, Collection, GatewayIntentBits, GuildMember, Message, OmitPartialGroupDMChannel } from "discord.js";
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID } from "./config"; 
+import { Client, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
-    findAllMembers,
-    findByUsername,
-    findTheOne,
-    findFather,
-    findById
 } from "./utils/findMemberFunctions";
-import { checkMemberRoles } from "./utils/checkMemberRoles";
-import { randomInterval } from "./utils/randomTime";
-//const reminder = require("./utils/reminder");
 import reminder from "./utils/reminder";
 import { banUser, demoteModerator, kickUser } from "./utils/weapons";
-import demote from "./commands/demote";
 
 //cache
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
@@ -38,9 +29,7 @@ client.once("clientReady", async () => {
     await server.members.fetch();
 
     const her = server.members.cache.get(AMY_ID!);
-    console.log(AMY_ID)
-    console.log(her)
-    //reminder.remindHer(her!);
+    reminder.remindHer(her!);
 
     const father = server.members.cache.get(MY_ID!);
     await father?.send("I'm online")
@@ -122,6 +111,12 @@ client.on("messageCreate", async (message) => {
     if (latest.createdTimestamp - penultimate.createdTimestamp < 500) {
         console.log(`Suspiciously fast message sent by ${message.author.displayName}; delay: ${latest.createdTimestamp - penultimate.createdTimestamp} milliseconds`);
         if (latest.content.length > 10 && latest.content === penultimate.content) {
+            const member = message.guild?.members.cache.get(message.author.id);
+            if (!member) {
+                console.log("Failed to find " + message.author.displayName + " in order to kick them for spamming");
+                return;
+            };
+            await kickUser(member, "Spam");
             //konsultera lola om vad som bör ske
         };
     };
@@ -164,25 +159,7 @@ client.on("messageCreate", async (message) => {
         if (!id) return;
         const mod = server.members.cache.get(id);
         console.log(mod?.displayName)
-        //await demoteModerator(mod!, server);
-    };
-});
-
-//tests for kicking and banning
-client.on("messageCreate", async (message) => {
-    if (message.guild) return;
-    if (message.author.id != MY_ID) return;
-    const server = client.guilds.cache.get(SERVER_ID!);
-    if (!server) {
-        console.log("Couldn't find server");
-        return;
-    };
-    const father = server.members.cache.get(MY_ID);
-    if (message.content.toLowerCase().includes("kick me")) {
-        await kickUser(father!, "Kicking succesful");
-    };
-    if (message.content.toLowerCase().includes("ban me")) {
-        await banUser(father!, "Banning succesful");
+        await demoteModerator(mod!, server);
     };
 });
 

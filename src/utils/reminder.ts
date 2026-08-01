@@ -2,7 +2,7 @@ import { Client, GuildMember } from "discord.js"
 import { reminders } from "../../reminders.json";
 import { randomInterval } from "./randomTime";
 import { SERVER_ID } from "../config";
-import { findFather, findTheOne } from "./findMemberFunctions";
+import { findTheOne } from "./findMemberFunctions";
 
 const reminderCounter: Record<string, number> = {};
 reminders.forEach(reminder => {
