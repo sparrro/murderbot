@@ -1,7 +1,7 @@
 import { Client, GuildMember } from "discord.js"
 import { reminders } from "../../reminders.json";
 import { randomInterval } from "./randomTime";
-import { SERVER_ID } from "../config";
+import { AMY_ID, LOLAPAZ_ID, SERVER_ID } from "../config";
 import { findTheOne } from "./findMemberFunctions";
 
 const reminderCounter: Record<string, number> = {};
@@ -44,7 +44,12 @@ class ReminderManager {
     startAgain = async (client: Client) => {
         setTimeout(async () => { //timeout to dodge rate limiting
             const server = client.guilds.cache.get(SERVER_ID!);
-            const her = await findTheOne(server!);
+            await server?.members.fetch();
+            let her: GuildMember | undefined;
+            her = server?.members.cache.get(AMY_ID!);
+            if (!her) {
+                her = server?.members.cache.get(LOLAPAZ_ID!);
+            };
             const { message, count } = messageGenerator();
             await her?.send(message);
             reminderCounter[count]++;
