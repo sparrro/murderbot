@@ -1,5 +1,5 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID } from "./config"; 
-import { Client, GatewayIntentBits, Message, OmitPartialGroupDMChannel } from "discord.js";
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID } from "./config"; 
+import { Client, GatewayIntentBits, GuildMember, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
 } from "./utils/findMemberFunctions";
@@ -30,8 +30,17 @@ client.once("clientReady", async () => {
 
     await server.members.fetch();
 
-    const her = server.members.cache.get(AMY_ID!);
-    reminder.remindHer(her!);
+    let her: GuildMember | undefined;
+
+    her = server.members.cache.get(AMY_ID!);
+
+    if (!her) {
+        her = server.members.cache.get(LOLAPAZ_ID!);
+    };
+
+    if (her) {
+        reminder.remindHer(her);
+    };
 
     const father = server.members.cache.get(MY_ID!);
     await father?.send("I'm online")

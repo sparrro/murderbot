@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const reminders_json_1 = require("../../reminders.json");
 const randomTime_1 = require("./randomTime");
 const config_1 = require("../config");
-const findMemberFunctions_1 = require("./findMemberFunctions");
 const reminderCounter = {};
 reminders_json_1.reminders.forEach(reminder => {
     reminderCounter[reminder] = 1;
@@ -44,6 +43,7 @@ class ReminderManager {
             }
             ;
             this.counter++;
+            console.log(her.displayName);
             console.log("Current time is " + (new Date().toLocaleString()) + ", next reminder to be sent in approximately " + (time / 1000 / 60 / 60).toPrecision(4) + " hours");
             setTimeout(() => { this.remindHer(her); }, time);
         });
@@ -53,7 +53,13 @@ class ReminderManager {
         this.startAgain = (client) => __awaiter(this, void 0, void 0, function* () {
             setTimeout(() => __awaiter(this, void 0, void 0, function* () {
                 const server = client.guilds.cache.get(config_1.SERVER_ID);
-                const her = yield (0, findMemberFunctions_1.findTheOne)(server);
+                yield (server === null || server === void 0 ? void 0 : server.members.fetch());
+                let her;
+                her = server === null || server === void 0 ? void 0 : server.members.cache.get(config_1.AMY_ID);
+                if (!her) {
+                    her = server === null || server === void 0 ? void 0 : server.members.cache.get(config_1.LOLAPAZ_ID);
+                }
+                ;
                 const { message, count } = messageGenerator();
                 yield (her === null || her === void 0 ? void 0 : her.send(message));
                 reminderCounter[count]++;

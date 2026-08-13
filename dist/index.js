@@ -35,8 +35,16 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
     if (!server)
         return;
     yield server.members.fetch();
-    const her = server.members.cache.get(config_1.AMY_ID);
-    reminder_1.default.remindHer(her);
+    let her;
+    her = server.members.cache.get(config_1.AMY_ID);
+    if (!her) {
+        her = server.members.cache.get(config_1.LOLAPAZ_ID);
+    }
+    ;
+    if (her) {
+        reminder_1.default.remindHer(her);
+    }
+    ;
     const father = server.members.cache.get(config_1.MY_ID);
     yield (father === null || father === void 0 ? void 0 : father.send("I'm online"));
     /*
@@ -94,6 +102,7 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
 }));
 //spam detector
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     if (message.author.bot)
         return;
     messages.push(message);
@@ -106,6 +115,13 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
     if (latest.createdTimestamp - penultimate.createdTimestamp < 500) {
         console.log(`Suspiciously fast message sent by ${message.author.displayName}; delay: ${latest.createdTimestamp - penultimate.createdTimestamp} milliseconds`);
         if (latest.content.length > 10 && latest.content === penultimate.content) {
+            const member = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.members.cache.get(message.author.id);
+            if (!member) {
+                console.log("Failed to find " + message.author.displayName + " in order to kick them for spamming");
+                return;
+            }
+            ;
+            yield (0, weapons_1.kickUser)(member, "Spam");
             //konsultera lola om vad som bör ske
         }
         ;
@@ -162,28 +178,6 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         yield (0, weapons_1.demoteModerator)(mod, server);
     }
     ;
-}));
-client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
-    if (message.guild)
-        return;
-    if (message.author.id != config_1.MY_ID)
-        return;
-    if (message.content != "do it")
-        return;
-    const server = client.guilds.cache.get(config_1.SERVER_ID);
-    const her = server === null || server === void 0 ? void 0 : server.members.cache.get(config_1.AMY_ID);
-    if (!her) {
-        console.log("need to fetch members cache");
-        return;
-    }
-    ;
-    const modRole = server === null || server === void 0 ? void 0 : server.roles.cache.get(config_1.MODROLE_ID);
-    if (!modRole) {
-        console.log("need to fetch roles cache");
-        return;
-    }
-    ;
-    yield her.roles.add(modRole);
 }));
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
     if (member.id === config_1.QATARI_ID) {
