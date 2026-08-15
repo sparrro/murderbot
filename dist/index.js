@@ -32,21 +32,32 @@ const client = new discord_js_1.Client({
 client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Logged in as ${client.user.tag}`);
     const server = client.guilds.cache.get(config_1.SERVER_ID);
-    if (!server)
+    if (!server) {
+        console.log("Couldn't find the server");
         return;
-    yield server.members.fetch();
-    let her;
-    her = server.members.cache.get(config_1.AMY_ID);
+    }
+    ;
+    /* reminder.remindHer(server);
+
+    await server.members.fetch();
+
+    let her: GuildMember | undefined;
+
+    her = server.members.cache.get(AMY_ID!);
+
     if (!her) {
-        her = server.members.cache.get(config_1.LOLAPAZ_ID);
-    }
-    ;
+        her = server.members.cache.get(LOLAPAZ_ID!);
+    };
+
     if (her) {
-        reminder_1.default.remindHer(her);
-    }
-    ;
+        reminder.remindHer(her);
+    }; */
+    yield server.members.fetch();
     const father = server.members.cache.get(config_1.MY_ID);
     yield (father === null || father === void 0 ? void 0 : father.send("I'm online"));
+    setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield reminder_1.default.remindHer(server);
+    }), 30000);
     /*
     Message cache cleaner
     if the server becomes much more active the clearout condition should be changed
