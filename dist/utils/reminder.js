@@ -33,19 +33,34 @@ class ReminderManager {
     constructor() {
         this.botherHer = true;
         this.counter = 1;
-        this.remindHer = (her) => __awaiter(this, void 0, void 0, function* () {
+        this.remindHer = (server) => __awaiter(this, void 0, void 0, function* () {
             const time = (0, randomTime_1.randomInterval)();
             if (this.botherHer) {
                 const { message, count } = messageGenerator();
-                yield her.send(message);
-                console.log("Reminder sent: " + message);
-                reminderCounter[count]++;
+                yield server.members.fetch();
+                let her;
+                console.log("Attempting to find her main account...");
+                her = server.members.cache.get(config_1.AMY_ID);
+                if (!her) {
+                    console.log("Failed to find her main account, attempting to find her other account...");
+                    her = server.members.cache.get(config_1.LOLAPAZ_ID);
+                }
+                ;
+                if (her) {
+                    console.log(`Account found: ${her.displayName}`);
+                    yield her.send(message);
+                    console.log("Reminder sent: " + message);
+                    reminderCounter[count]++;
+                }
+                else {
+                    console.log(`Failed to find either of her accounts`);
+                }
+                ;
             }
             ;
             this.counter++;
-            console.log(her.displayName);
             console.log("Current time is " + (new Date().toLocaleString()) + ", next reminder to be sent in approximately " + (time / 1000 / 60 / 60).toPrecision(4) + " hours");
-            setTimeout(() => { this.remindHer(her); }, time);
+            setTimeout(() => { this.remindHer(server); }, time);
         });
         this.stopBothering = () => {
             this.botherHer = false;

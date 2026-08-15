@@ -26,7 +26,13 @@ client.once("clientReady", async () => {
     console.log(`Logged in as ${client.user!.tag}`);
 
     const server = client.guilds.cache.get(SERVER_ID!);
-    if (!server) return;
+    if (!server) {
+        console.log("Couldn't find the server");
+        return;
+    };
+
+
+    /* reminder.remindHer(server);
 
     await server.members.fetch();
 
@@ -40,10 +46,15 @@ client.once("clientReady", async () => {
 
     if (her) {
         reminder.remindHer(her);
-    };
+    }; */
 
+    await server.members.fetch();
     const father = server.members.cache.get(MY_ID!);
-    await father?.send("I'm online")
+    await father?.send("I'm online");
+
+    setTimeout(async () => {
+        await reminder.remindHer(server);
+    }, 30000);
 
     /*
     Message cache cleaner

@@ -1,4 +1,4 @@
-import { Client, GuildMember } from "discord.js"
+import { Client, Guild, GuildMember } from "discord.js"
 import { reminders } from "../../reminders.json";
 import { randomInterval } from "./randomTime";
 import { AMY_ID, LOLAPAZ_ID, SERVER_ID } from "../config";
@@ -26,17 +26,30 @@ If you want me to stop just dm me "stop"` : ""}
 class ReminderManager {
     botherHer = true;
     counter = 1;
-    remindHer = async (her: GuildMember) => {
+    remindHer = async (server: Guild) => {
         const time = randomInterval();
         if (this.botherHer) {
             const { message, count } = messageGenerator();
-            await her.send(message);
-            console.log("Reminder sent: " + message);
-            reminderCounter[count]++;
+            await server.members.fetch();
+            let her: GuildMember | undefined;
+            console.log("Attempting to find her main account...");
+            her = server.members.cache.get(AMY_ID!);
+            if (!her) {
+                console.log("Failed to find her main account, attempting to find her other account...");
+                her = server.members.cache.get(LOLAPAZ_ID!);
+            };
+            if (her) {
+                console.log(`Account found: ${her.displayName}`);
+                await her.send(message);
+                console.log("Reminder sent: " + message);
+                reminderCounter[count]++;
+            } else {
+                console.log(`Failed to find either of her accounts`);
+            };
         };
         this.counter++;
         console.log("Current time is " + (new Date().toLocaleString()) + ", next reminder to be sent in approximately " + (time / 1000 / 60 / 60).toPrecision(4) + " hours")
-        setTimeout(() => { this.remindHer(her) }, time);
+        setTimeout(() => { this.remindHer(server) }, time);
     };
     stopBothering = () => {
         this.botherHer = false;
@@ -53,7 +66,7 @@ class ReminderManager {
             const { message, count } = messageGenerator();
             await her?.send(message);
             reminderCounter[count]++;
-        }, 2500);
+        }, 15000);
         this.botherHer = true;
     };
 };
