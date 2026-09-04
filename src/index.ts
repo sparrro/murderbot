@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID } from "./config"; 
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, QUEZEL_ID } from "./config"; 
 import { Client, GatewayIntentBits, GuildMember, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
@@ -181,6 +181,8 @@ client.on("messageCreate", async (message) => {
             id = HATERS_ID;
         } else if (message.content.toLocaleLowerCase().includes("casp")) {
             id = CASPIAN_ID;
+        } else if (message.content.toLowerCase().includes("quezel")) {
+            id = QUEZEL_ID;
         };
         if (!id) return;
         const mod = server.members.cache.get(id);
