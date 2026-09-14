@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, QUEZEL_ID } from "./config"; 
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID } from "./config"; 
 import { Client, GatewayIntentBits, GuildMember, Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
@@ -181,6 +181,8 @@ client.on("messageCreate", async (message) => {
             id = HATERS_ID;
         } else if (message.content.toLocaleLowerCase().includes("casp")) {
             id = CASPIAN_ID;
+        } else if (message.content.toLowerCase().includes("murk")) {
+            id = MURKY_ID;
         } else if (message.content.toLowerCase().includes("quezel")) {
             id = QUEZEL_ID;
         };
@@ -188,6 +190,25 @@ client.on("messageCreate", async (message) => {
         const mod = server.members.cache.get(id);
         console.log(mod?.displayName)
         await demoteModerator(mod!, server);
+    };
+});
+
+client.on("messageCreate", async (message) => {
+    if (message.author.id == ENEMY_ID) {
+        console.log("The enemy just posted");
+        console.log(message.content);
+        if (!message.channel) {
+            console.log("She dm'ed me...");
+            return;
+        };
+        const server = client.guilds.cache.get(SERVER_ID!);
+        const enemy = server!.members.cache.get(ENEMY_ID);
+        if (enemy) {
+            await kickUser(enemy, "I told you not to chat in here");
+            console.log("Got her ass");
+        } else {
+            console.log("She's not here anymore, Bocchi must have beat me to it");
+        };
     };
 });
 
