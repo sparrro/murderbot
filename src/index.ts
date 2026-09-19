@@ -1,5 +1,5 @@
 import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID } from "./config"; 
-import { Client, GatewayIntentBits, GuildMember, Message, OmitPartialGroupDMChannel } from "discord.js";
+import { Client, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel } from "discord.js";
 import {
     findMods,
 } from "./utils/findMemberFunctions";
@@ -147,7 +147,7 @@ client.on("messageCreate", async (message) => {
 
 client.on("messageCreate", (message) => {
     if (message.guild) return;
-    if (message.author.id != AMY_ID) return;
+    if (!(message.author.id == AMY_ID || message.author.id == LOLAPAZ_ID)) return;
     if (message.content.toLowerCase() === "stop") {
         message.reply(`Oki I'll stop. If you ever want me to start again, just dm me "start"`);
         reminder.stopBothering();
@@ -188,7 +188,7 @@ client.on("messageCreate", async (message) => {
         };
         if (!id) return;
         const mod = server.members.cache.get(id);
-        console.log(mod?.displayName)
+        console.log(mod?.displayName + " demoted")
         await demoteModerator(mod!, server);
     };
 });
@@ -197,10 +197,11 @@ client.on("messageCreate", async (message) => {
     if (message.author.id == ENEMY_ID) {
         console.log("The enemy just posted");
         console.log(message.content);
-        if (!message.channel) {
-            console.log("She dm'ed me...");
+        if (message.type == MessageType.UserJoin) {
+            console.log("She just rejoined, false alarm");
             return;
         };
+        if (message.content.length == 0) return;
         const server = client.guilds.cache.get(SERVER_ID!);
         const enemy = server!.members.cache.get(ENEMY_ID);
         if (enemy) {
