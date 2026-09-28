@@ -213,6 +213,15 @@ client.on("messageCreate", async (message) => {
     };
 });
 
+client.on("messageCreate", async (message) => {
+    if (message.author.id != LOLAPAZ_ID) return;
+    const server = client.guilds.cache.get(SERVER_ID!);
+    const father = server!.members.cache.get(MY_ID!);
+    await father?.send({
+        content: message.content
+    });
+});
+
 client.on("guildMemberAdd", async (member) => {
     if (member.id === QATARI_ID) {
         await banUser(member, "You're not welcome back unless you apologise to Lola first");
