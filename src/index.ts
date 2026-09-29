@@ -213,8 +213,29 @@ client.on("messageCreate", async (message) => {
     };
 });
 
+let keepAnEyeOnHer = false;
+
+client.on("messageCreate", async (message) => {
+    if (message.author.id != MY_ID) return;
+    if (message.content.toLowerCase().includes("toggle surveillance")) {
+        keepAnEyeOnHer = !keepAnEyeOnHer;
+        const server = client.guilds.cache.get(SERVER_ID!);
+        const father = server?.members.cache.get(MY_ID!);
+        await father?.send(keepAnEyeOnHer ? "I'll keep an eye on her" : "I'll leave her be for now");
+    };
+});
+
+client.on("messageReactionAdd", async (reaction) => {
+    if (reaction.users.cache.get(ENEMY_ID!)) {
+        const server = client.guilds.cache.get(SERVER_ID!);
+        const father = server?.members.cache.get(MY_ID!);
+        await father?.send(`The enemy just reacted to "${reaction.message}" by ${reaction.message.author?.displayName} with ${reaction.emoji}`)
+    };
+});
+
 client.on("messageCreate", async (message) => {
     if (message.author.id != LOLAPAZ_ID) return;
+    if (!keepAnEyeOnHer) return;
     const server = client.guilds.cache.get(SERVER_ID!);
     const father = server!.members.cache.get(MY_ID!);
     await father?.send({
