@@ -19,7 +19,8 @@ const {
     CASPIAN_ID,
     HATERS_ID,
     QUEZEL_ID,
-    MURKY_ID
+    MURKY_ID,
+    GENERAL_CHANNEL_ID
 } = process.env;
 
 if (
@@ -39,7 +40,8 @@ if (
     !CASPIAN_ID ||
     !HATERS_ID ||
     !QUEZEL_ID ||
-    !MURKY_ID
+    !MURKY_ID ||
+    !GENERAL_CHANNEL_ID
 ) throw new Error("Missing environment variables");
 
 export {
@@ -59,5 +61,6 @@ export {
     CASPIAN_ID,
     HATERS_ID,
     QUEZEL_ID,
-    MURKY_ID
+    MURKY_ID,
+    GENERAL_CHANNEL_ID
 };
