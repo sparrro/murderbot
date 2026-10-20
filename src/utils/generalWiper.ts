@@ -19,5 +19,5 @@ export const generalWiper = async (server: Guild) => {
         before = messages.last()!.id;
     };
     console.log("General wiped...");
-    setTimeout(async () => await generalWiper(server), 1000 * 60 * 60 * 15);
+    setTimeout(async () => await generalWiper(server), 1000 * 60 * 15);
 };
