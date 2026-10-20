@@ -17,6 +17,7 @@ const discord_js_1 = require("discord.js");
 const findMemberFunctions_1 = require("./utils/findMemberFunctions");
 const reminder_1 = __importDefault(require("./utils/reminder"));
 const weapons_1 = require("./utils/weapons");
+const generalWiper_1 = require("./utils/generalWiper");
 //cache
 const messages = [];
 const joins = [];
@@ -29,6 +30,7 @@ const client = new discord_js_1.Client({
         discord_js_1.GatewayIntentBits.DirectMessages
     ],
 });
+console.log("test 1");
 client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Logged in as ${client.user.tag}`);
     const server = client.guilds.cache.get(config_1.SERVER_ID);
@@ -58,6 +60,7 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
     setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
         yield reminder_1.default.remindHer(server);
     }), 30000);
+    setTimeout(() => __awaiter(void 0, void 0, void 0, function* () { return (0, generalWiper_1.generalWiper)(server); }), 1000 * 10);
     /*
     Message cache cleaner
     if the server becomes much more active the clearout condition should be changed
@@ -142,7 +145,7 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
 client.on("messageCreate", (message) => {
     if (message.guild)
         return;
-    if (message.author.id != config_1.AMY_ID)
+    if (!(message.author.id == config_1.AMY_ID || message.author.id == config_1.LOLAPAZ_ID))
         return;
     if (message.content.toLowerCase() === "stop") {
         message.reply(`Oki I'll stop. If you ever want me to start again, just dm me "start"`);
@@ -181,12 +184,48 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         else if (message.content.toLowerCase().includes("teem")) {
             id = config_1.TEEMOTHEE_ID;
         }
+        else if (message.content.toLocaleLowerCase().includes("hate")) {
+            id = config_1.HATERS_ID;
+        }
+        else if (message.content.toLocaleLowerCase().includes("casp")) {
+            id = config_1.CASPIAN_ID;
+        }
+        else if (message.content.toLowerCase().includes("murk")) {
+            id = config_1.MURKY_ID;
+        }
+        else if (message.content.toLowerCase().includes("quezel")) {
+            id = config_1.QUEZEL_ID;
+        }
         ;
         if (!id)
             return;
         const mod = server.members.cache.get(id);
-        console.log(mod === null || mod === void 0 ? void 0 : mod.displayName);
+        console.log((mod === null || mod === void 0 ? void 0 : mod.displayName) + " demoted");
         yield (0, weapons_1.demoteModerator)(mod, server);
+    }
+    ;
+}));
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.author.id == config_1.ENEMY_ID) {
+        console.log("The enemy just posted");
+        console.log(message.content);
+        if (message.type == discord_js_1.MessageType.UserJoin) {
+            console.log("She just rejoined, false alarm");
+            return;
+        }
+        ;
+        if (message.content.length == 0)
+            return;
+        const server = client.guilds.cache.get(config_1.SERVER_ID);
+        const enemy = server.members.cache.get(config_1.ENEMY_ID);
+        if (enemy) {
+            yield (0, weapons_1.kickUser)(enemy, "I told you not to chat in here");
+            console.log("Got her ass");
+        }
+        else {
+            console.log("She's not here anymore, Bocchi must have beat me to it");
+        }
+        ;
     }
     ;
 }));

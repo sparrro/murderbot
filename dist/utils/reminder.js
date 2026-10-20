@@ -78,7 +78,7 @@ class ReminderManager {
                 const { message, count } = messageGenerator();
                 yield (her === null || her === void 0 ? void 0 : her.send(message));
                 reminderCounter[count]++;
-            }), 2500);
+            }), 15000);
             this.botherHer = true;
         });
     }

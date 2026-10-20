@@ -1,10 +1,11 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID } from "./config"; 
-import { Client, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel } from "discord.js";
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID } from "./config"; 
+import { Client, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, TextChannel } from "discord.js";
 import {
     findMods,
 } from "./utils/findMemberFunctions";
 import reminder from "./utils/reminder";
 import { banUser, demoteModerator, kickUser } from "./utils/weapons";
+import { generalWiper } from "./utils/generalWiper";
 
 //cache
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
@@ -56,6 +57,8 @@ client.once("clientReady", async () => {
     setTimeout(async () => {
         await reminder.remindHer(server);
     }, 30000);
+
+    setTimeout(async () => generalWiper(server), 1000 * 10);
 
     /*
     Message cache cleaner
