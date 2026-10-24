@@ -73,6 +73,10 @@ client.once("clientReady", async () => {
         }
     }, 1000 * 60 * 15);
 
+    setInterval(async () => {
+        await father?.send("Don't forget to renew my hosting!");
+    }, 1000 * 60 * 60 * 24 * 2);
+
     /* await checkMemberRoles(server); */ //lola gör den själv
 
 });
