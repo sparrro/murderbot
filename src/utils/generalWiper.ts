@@ -18,6 +18,6 @@ export const generalWiper = async (server: Guild) => {
         await generalCh.bulkDelete(delenda, true);
         before = messages.last()!.id;
     };
-    console.log("General wiped...");
+    console.log("General wiped at " + Date.now().toLocaleString() + "...");
     setTimeout(async () => await generalWiper(server), 1000 * 60 * 15);
 };
