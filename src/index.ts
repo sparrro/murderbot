@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID } from "./config"; 
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID } from "./config"; 
 import { Client, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, TextChannel } from "discord.js";
 import {
     findMods,
@@ -21,8 +21,6 @@ const client = new Client({
         GatewayIntentBits.GuildMessageReactions
     ],
 });
-
-console.log("test 1")
 
 client.once("clientReady", async () => {
     console.log(`Logged in as ${client.user!.tag}`);
@@ -49,6 +47,19 @@ client.once("clientReady", async () => {
     if (her) {
         reminder.remindHer(her);
     }; */
+
+    const dungeon = server.channels.cache.get(DUNGEON_CHANNEL_ID!) as TextChannel;
+    if (!dungeon) {
+        console.log("Couldn't find the dungeon");
+    } else {
+        await dungeon.messages.fetch();
+        const botchiMsgs = dungeon.messages.cache.filter(message => message.author.id == BOTCHI_ID);
+        if (botchiMsgs.size > 0) {
+            botchiMsgs.delete(botchiMsgs.firstKey()!);
+            await dungeon.bulkDelete(botchiMsgs);
+            console.log("Shut up Botchi");
+        };
+    };
 
     await server.members.fetch();
     const father = server.members.cache.get(MY_ID!);
@@ -249,6 +260,14 @@ client.on("messageCreate", async (message) => {
     await father?.send({
         content: message.content
     });
+});
+
+client.on("messageCreate", async (message) => {
+    if (message.channel.id != DUNGEON_CHANNEL_ID) return;
+    if (message.author.id == LOLAPAZ_ID || message.author.id == BOTCHI_ID || message.author.id == ART_ID) return;
+    console.log(`${message.author.displayName} just tried to post "${message.content}" in the dungeon...`);
+    await message.delete();
+    await message.author.send("You can't post in the dungeon directly!");
 });
 
 client.on("guildMemberAdd", async (member) => {

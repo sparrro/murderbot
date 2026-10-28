@@ -20,7 +20,10 @@ const {
     HATERS_ID,
     QUEZEL_ID,
     MURKY_ID,
-    GENERAL_CHANNEL_ID
+    GENERAL_CHANNEL_ID,
+    DUNGEON_CHANNEL_ID,
+    BOTCHI_ID,
+    ART_ID
 } = process.env;
 
 if (
@@ -41,7 +44,10 @@ if (
     !HATERS_ID ||
     !QUEZEL_ID ||
     !MURKY_ID ||
-    !GENERAL_CHANNEL_ID
+    !GENERAL_CHANNEL_ID ||
+    !DUNGEON_CHANNEL_ID ||
+    !BOTCHI_ID ||
+    !ART_ID
 ) throw new Error("Missing environment variables");
 
 export {
@@ -62,5 +68,8 @@ export {
     HATERS_ID,
     QUEZEL_ID,
     MURKY_ID,
-    GENERAL_CHANNEL_ID
+    GENERAL_CHANNEL_ID,
+    DUNGEON_CHANNEL_ID,
+    BOTCHI_ID,
+    ART_ID
 };

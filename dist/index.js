@@ -27,7 +27,8 @@ const client = new discord_js_1.Client({
         discord_js_1.GatewayIntentBits.Guilds,
         discord_js_1.GatewayIntentBits.GuildMessages,
         discord_js_1.GatewayIntentBits.MessageContent,
-        discord_js_1.GatewayIntentBits.DirectMessages
+        discord_js_1.GatewayIntentBits.DirectMessages,
+        discord_js_1.GatewayIntentBits.GuildMessageReactions
     ],
 });
 console.log("test 1");
@@ -54,6 +55,21 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
     if (her) {
         reminder.remindHer(her);
     }; */
+    const dungeon = server.channels.cache.get(config_1.DUNGEON_CHANNEL_ID);
+    if (!dungeon) {
+        console.log("Couldn't find the dungeon");
+    }
+    else {
+        yield dungeon.messages.fetch();
+        const botchiMsgs = dungeon.messages.cache.filter(message => message.author.id == config_1.BOTCHI_ID);
+        if (botchiMsgs.size > 0) {
+            botchiMsgs.delete(botchiMsgs.firstKey());
+            yield dungeon.bulkDelete(botchiMsgs);
+            console.log("Shut up Botchi");
+        }
+        ;
+    }
+    ;
     yield server.members.fetch();
     const father = server.members.cache.get(config_1.MY_ID);
     yield (father === null || father === void 0 ? void 0 : father.send("I'm online"));
@@ -73,6 +89,9 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
             console.log("Cleaned out messages cache...");
         }
     }, 1000 * 60 * 15);
+    setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield (father === null || father === void 0 ? void 0 : father.send("Don't forget to renew my hosting!"));
+    }), 1000 * 60 * 60 * 24 * 2);
     /* await checkMemberRoles(server); */ //lola gör den själv
 }));
 client.login(config_1.TOKEN);
@@ -228,6 +247,47 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         ;
     }
     ;
+}));
+let keepAnEyeOnHer = false;
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.author.id != config_1.MY_ID)
+        return;
+    if (message.content.toLowerCase().includes("toggle surveillance")) {
+        keepAnEyeOnHer = !keepAnEyeOnHer;
+        const server = client.guilds.cache.get(config_1.SERVER_ID);
+        const father = server === null || server === void 0 ? void 0 : server.members.cache.get(config_1.MY_ID);
+        yield (father === null || father === void 0 ? void 0 : father.send(keepAnEyeOnHer ? "I'll keep an eye on her" : "I'll leave her be for now"));
+    }
+    ;
+}));
+client.on("messageReactionAdd", (reaction) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    if (reaction.users.cache.get(config_1.ENEMY_ID)) {
+        const server = client.guilds.cache.get(config_1.SERVER_ID);
+        const father = server === null || server === void 0 ? void 0 : server.members.cache.get(config_1.MY_ID);
+        yield (father === null || father === void 0 ? void 0 : father.send(`The enemy just reacted to "${reaction.message}" by ${(_a = reaction.message.author) === null || _a === void 0 ? void 0 : _a.displayName} with ${reaction.emoji}`));
+    }
+    ;
+}));
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.author.id != config_1.LOLAPAZ_ID)
+        return;
+    if (!keepAnEyeOnHer)
+        return;
+    const server = client.guilds.cache.get(config_1.SERVER_ID);
+    const father = server.members.cache.get(config_1.MY_ID);
+    yield (father === null || father === void 0 ? void 0 : father.send({
+        content: message.content
+    }));
+}));
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.channel.id != config_1.DUNGEON_CHANNEL_ID)
+        return;
+    if (message.author.id == config_1.LOLAPAZ_ID || message.author.id == config_1.BOTCHI_ID)
+        return;
+    console.log(`${message.author.displayName} just tried to post "${message.content}" in the dungeon...`);
+    yield message.delete();
+    yield message.author.send("You can't post in the dungeon directly!");
 }));
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
     if (member.id === config_1.QATARI_ID) {
