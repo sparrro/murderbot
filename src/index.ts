@@ -262,14 +262,6 @@ client.on("messageCreate", async (message) => {
     });
 });
 
-client.on("messageCreate", async (message) => {
-    if (message.channel.id != DUNGEON_CHANNEL_ID) return;
-    if (message.author.id == LOLAPAZ_ID || message.author.id == ART_ID) return;
-    console.log(`${message.author.displayName} just tried to post "${message.content}" in the dungeon...`);
-    await message.delete();
-    await message.author.send("You can't post in the dungeon directly!");
-});
-
 client.on("guildMemberAdd", async (member) => {
     if (member.id === QATARI_ID) {
         await banUser(member, "You're not welcome back unless you apologise to Lola first");
