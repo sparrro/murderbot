@@ -31,7 +31,6 @@ const client = new discord_js_1.Client({
         discord_js_1.GatewayIntentBits.GuildMessageReactions
     ],
 });
-console.log("test 1");
 client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Logged in as ${client.user.tag}`);
     const server = client.guilds.cache.get(config_1.SERVER_ID);
@@ -281,13 +280,30 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
     }));
 }));
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
-    if (message.channel.id != config_1.DUNGEON_CHANNEL_ID)
+    if (message.author.id != config_1.MY_ID)
         return;
-    if (message.author.id == config_1.LOLAPAZ_ID || message.author.id == config_1.BOTCHI_ID)
+    if (message.content != "test joinedat")
         return;
-    console.log(`${message.author.displayName} just tried to post "${message.content}" in the dungeon...`);
-    yield message.delete();
-    yield message.author.send("You can't post in the dungeon directly!");
+    console.log("message received");
+    setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b, _c;
+        const server = client.guilds.cache.get(config_1.SERVER_ID);
+        const me = (_a = (yield (server === null || server === void 0 ? void 0 : server.members.fetch()))) === null || _a === void 0 ? void 0 : _a.get(config_1.MY_ID);
+        me ? console.log(me.joinedAt, me.joinedTimestamp) : console.log("Couldn't find me");
+        yield message.reply(`You joined at ${(_b = me === null || me === void 0 ? void 0 : me.joinedAt) === null || _b === void 0 ? void 0 : _b.toLocaleTimeString()} o'clock, ${(_c = me === null || me === void 0 ? void 0 : me.joinedAt) === null || _c === void 0 ? void 0 : _c.toLocaleDateString()}`);
+    }), 1000 * 30);
+    return;
+}));
+client.on("guildMemberRemove", (leaver) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    const server = client.guilds.cache.get(config_1.SERVER_ID);
+    const modLog = (_a = (yield (server === null || server === void 0 ? void 0 : server.channels.fetch()))) === null || _a === void 0 ? void 0 : _a.get(config_1.MODLOG_CHANNEL_ID);
+    if (!modLog) {
+        console.log("Couldn't find the moderation log");
+        return;
+    }
+    ;
+    yield modLog.send(`${leaver.user.displayName} left, joined at ${(_b = leaver.joinedAt) === null || _b === void 0 ? void 0 : _b.toLocaleDateString()}`);
 }));
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
     if (member.id === config_1.QATARI_ID) {

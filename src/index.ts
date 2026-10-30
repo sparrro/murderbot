@@ -1,5 +1,5 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID } from "./config"; 
-import { Client, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, TextChannel } from "discord.js";
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID } from "./config"; 
+import { Client, DMChannel, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, TextChannel } from "discord.js";
 import {
     findMods,
 } from "./utils/findMemberFunctions";
@@ -260,6 +260,30 @@ client.on("messageCreate", async (message) => {
     await father?.send({
         content: message.content
     });
+});
+
+client.on("messageCreate", async (message) => {
+    if (message.author.id != MY_ID) return;
+    if (message.content != "test joinedat") return;
+    console.log("message received")
+    
+    setTimeout(async () => {
+        const server = client.guilds.cache.get(SERVER_ID!);
+        const me = (await server?.members.fetch())?.get(MY_ID!);
+        me ? console.log(me.joinedAt, me.joinedTimestamp) : console.log("Couldn't find me");
+        await message.reply(`You joined at ${me?.joinedAt?.toLocaleTimeString()} o'clock, ${me?.joinedAt?.toLocaleDateString()}`)
+    }, 1000 * 30);
+    return;
+});
+
+client.on("guildMemberRemove", async (leaver) => {
+    const server = client.guilds.cache.get(SERVER_ID!);
+    const modLog = (await server?.channels.fetch())?.get(MODLOG_CHANNEL_ID!) as TextChannel | null | undefined;
+    if (!modLog) {
+        console.log("Couldn't find the moderation log");
+        return;
+    };
+    await modLog.send(`${leaver.user.displayName} left, who joined at ${leaver.joinedAt?.toLocaleDateString()}`);
 });
 
 client.on("guildMemberAdd", async (member) => {
