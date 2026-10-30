@@ -271,7 +271,7 @@ client.on("guildMemberRemove", async (leaver) => {
         return;
     };
     const date = moment(leaver.joinedAt).tz("America/Vancouver").format("YYYY-MM-DD HH:mm");
-    await modLog.send(`${leaver.user.displayName} left, who joined at ${date}`);
+    await modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}) left, who joined at ${date}`);
 });
 
 client.on("guildMemberAdd", async (member) => {

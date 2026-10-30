@@ -290,8 +290,7 @@ client.on("guildMemberRemove", (leaver) => __awaiter(void 0, void 0, void 0, fun
     }
     ;
     const date = (0, moment_timezone_1.default)(leaver.joinedAt).tz("America/Vancouver").format("YYYY-MM-DD HH:mm");
-    const time = (0, moment_timezone_1.default)(leaver.joinedAt).tz("America/Vancouver").format("HH:mm");
-    yield modLog.send(`${leaver.user.displayName} left, who joined at ${date}`);
+    yield modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}) left, who joined at ${date}`);
 }));
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
     if (member.id === config_1.QATARI_ID) {
