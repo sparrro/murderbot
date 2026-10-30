@@ -262,20 +262,6 @@ client.on("messageCreate", async (message) => {
     });
 });
 
-client.on("messageCreate", async (message) => {
-    if (message.author.id != MY_ID) return;
-    if (message.content != "test joinedat") return;
-    console.log("message received")
-    
-    setTimeout(async () => {
-        const server = client.guilds.cache.get(SERVER_ID!);
-        const me = (await server?.members.fetch())?.get(MY_ID!);
-        me ? console.log(me.joinedAt, me.joinedTimestamp) : console.log("Couldn't find me");
-        await message.reply(`You joined at ${me?.joinedAt?.toLocaleTimeString()} o'clock, ${me?.joinedAt?.toLocaleDateString()}`)
-    }, 1000 * 30);
-    return;
-});
-
 client.on("guildMemberRemove", async (leaver) => {
     const server = client.guilds.cache.get(SERVER_ID!);
     const modLog = (await server?.channels.fetch())?.get(MODLOG_CHANNEL_ID!) as TextChannel | null | undefined;
@@ -283,7 +269,7 @@ client.on("guildMemberRemove", async (leaver) => {
         console.log("Couldn't find the moderation log");
         return;
     };
-    await modLog.send(`${leaver.user.displayName} left, who joined at ${leaver.joinedAt?.toLocaleDateString()}`);
+    await modLog.send(`${leaver.user.displayName} left, who joined at ${leaver.joinedAt?.toLocaleTimeString()} o'clock, ${leaver.joinedAt?.toLocaleDateString()}`);
 });
 
 client.on("guildMemberAdd", async (member) => {
