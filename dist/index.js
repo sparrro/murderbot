@@ -18,6 +18,7 @@ const findMemberFunctions_1 = require("./utils/findMemberFunctions");
 const reminder_1 = __importDefault(require("./utils/reminder"));
 const weapons_1 = require("./utils/weapons");
 const generalWiper_1 = require("./utils/generalWiper");
+const moment_timezone_1 = __importDefault(require("moment-timezone"));
 //cache
 const messages = [];
 const joins = [];
@@ -279,23 +280,8 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         content: message.content
     }));
 }));
-client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
-    if (message.author.id != config_1.MY_ID)
-        return;
-    if (message.content != "test joinedat")
-        return;
-    console.log("message received");
-    setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-        var _a, _b, _c;
-        const server = client.guilds.cache.get(config_1.SERVER_ID);
-        const me = (_a = (yield (server === null || server === void 0 ? void 0 : server.members.fetch()))) === null || _a === void 0 ? void 0 : _a.get(config_1.MY_ID);
-        me ? console.log(me.joinedAt, me.joinedTimestamp) : console.log("Couldn't find me");
-        yield message.reply(`You joined at ${(_b = me === null || me === void 0 ? void 0 : me.joinedAt) === null || _b === void 0 ? void 0 : _b.toLocaleTimeString()} o'clock, ${(_c = me === null || me === void 0 ? void 0 : me.joinedAt) === null || _c === void 0 ? void 0 : _c.toLocaleDateString()}`);
-    }), 1000 * 30);
-    return;
-}));
 client.on("guildMemberRemove", (leaver) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a;
     const server = client.guilds.cache.get(config_1.SERVER_ID);
     const modLog = (_a = (yield (server === null || server === void 0 ? void 0 : server.channels.fetch()))) === null || _a === void 0 ? void 0 : _a.get(config_1.MODLOG_CHANNEL_ID);
     if (!modLog) {
@@ -303,7 +289,9 @@ client.on("guildMemberRemove", (leaver) => __awaiter(void 0, void 0, void 0, fun
         return;
     }
     ;
-    yield modLog.send(`${leaver.user.displayName} left, joined at ${(_b = leaver.joinedAt) === null || _b === void 0 ? void 0 : _b.toLocaleDateString()}`);
+    const date = (0, moment_timezone_1.default)(leaver.joinedAt).tz("America/Vancouver").format("YYYY-MM-DD HH:mm");
+    const time = (0, moment_timezone_1.default)(leaver.joinedAt).tz("America/Vancouver").format("HH:mm");
+    yield modLog.send(`${leaver.user.displayName} left, who joined at ${date}`);
 }));
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
     if (member.id === config_1.QATARI_ID) {

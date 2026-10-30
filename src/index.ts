@@ -6,6 +6,7 @@ import {
 import reminder from "./utils/reminder";
 import { banUser, demoteModerator, kickUser } from "./utils/weapons";
 import { generalWiper } from "./utils/generalWiper";
+import moment from "moment-timezone";
 
 //cache
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
@@ -269,7 +270,8 @@ client.on("guildMemberRemove", async (leaver) => {
         console.log("Couldn't find the moderation log");
         return;
     };
-    await modLog.send(`${leaver.user.displayName} left, who joined at ${leaver.joinedAt?.toLocaleTimeString()} o'clock, ${leaver.joinedAt?.toLocaleDateString()}`);
+    const date = moment(leaver.joinedAt).tz("America/Vancouver").format("YYYY-MM-DD HH:mm");
+    await modLog.send(`${leaver.user.displayName} left, who joined at ${date}`);
 });
 
 client.on("guildMemberAdd", async (member) => {
