@@ -274,6 +274,14 @@ client.on("guildMemberRemove", async (leaver) => {
     await modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}) left, who joined at ${date}`);
 });
 
+client.on("messageCreate", async (message) => {
+    if (message.author.id != BOTCHI_ID) return;
+    if (message.channel.id != DUNGEON_CHANNEL_ID) return;
+    await message.delete();
+    console.log("Shut up Bocchi I'm gonna fuck you in the ass with my sheet metal cock");
+    return;
+});
+
 client.on("guildMemberAdd", async (member) => {
     if (member.id === QATARI_ID) {
         await banUser(member, "You're not welcome back unless you apologise to Lola first");
