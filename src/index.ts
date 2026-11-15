@@ -282,6 +282,13 @@ client.on("messageCreate", async (message) => {
     return;
 });
 
+client.on("messageCreate", async (message) => {
+    if (message.author.id != AMY_ID) return;
+    if (message.channel.id == MODLOG_CHANNEL_ID) return;
+    await message.delete();
+    await message.author.send("You're on your private account dummy!");
+});
+
 client.on("guildMemberAdd", async (member) => {
     if (member.id === QATARI_ID) {
         await banUser(member, "You're not welcome back unless you apologise to Lola first");
