@@ -19,9 +19,11 @@ const reminder_1 = __importDefault(require("./utils/reminder"));
 const weapons_1 = require("./utils/weapons");
 const generalWiper_1 = require("./utils/generalWiper");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
+const sleep_1 = require("./utils/sleep");
 //cache
 const messages = [];
 const joins = [];
+const reminded = [];
 const client = new discord_js_1.Client({
     intents: [
         discord_js_1.GatewayIntentBits.GuildMembers,
@@ -290,7 +292,59 @@ client.on("guildMemberRemove", (leaver) => __awaiter(void 0, void 0, void 0, fun
     }
     ;
     const date = (0, moment_timezone_1.default)(leaver.joinedAt).tz("America/Vancouver").format("YYYY-MM-DD HH:mm");
-    yield modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}) left, who joined at ${date}`);
+    yield modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}, id ${leaver.user.id}) left\nThey joined at ${date}`);
+}));
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.author.id != config_1.BOTCHI_ID)
+        return;
+    if (message.channel.id != config_1.DUNGEON_CHANNEL_ID)
+        return;
+    yield message.delete();
+    console.log("Shut up Bocchi I'm gonna fuck you in the ass with my sheet metal cock");
+    return;
+}));
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.author.id != config_1.AMY_ID)
+        return;
+    if (message.channel.id == config_1.MODLOG_CHANNEL_ID)
+        return;
+    yield message.delete();
+    yield message.author.send("You're on your private account dummy!");
+}));
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.guild)
+        return;
+    if (message.author.id != config_1.LOLAPAZ_ID && message.author.id != config_1.AMY_ID && message.author.id != config_1.MY_ID)
+        return;
+    if (!message.content.toLowerCase().includes("member role"))
+        return;
+    const reply = yield message.author.send("Order received, I'll set to work reminding them...");
+    let remindees = 0;
+    const server = client.guilds.cache.get(config_1.SERVER_ID);
+    const members = yield (server === null || server === void 0 ? void 0 : server.members.fetch());
+    if (!members) {
+        console.log("Couldn't get member list");
+        return;
+    }
+    ;
+    for (const [, member] of members) {
+        if (!member.roles.cache.has(config_1.MEMBER_ROLE_ID) && !reminded.includes(member.id)) {
+            try {
+                yield member.send("Hello there! I'm the head of security for Lola Paz's server\nI just wanted to let you know there's a lot more to the server than you can see upon joining\nYou can gain access to the rest of it by going to the 『♡』survey『♡』channel and answering some of the surveys to get the member role");
+                reminded.push(member.id);
+                remindees++;
+                yield (0, sleep_1.sleep)(2000);
+            }
+            catch (_a) {
+                console.log(`Could not dm ${member.displayName}`);
+            }
+            ;
+        }
+        ;
+    }
+    ;
+    yield reply.edit(`Order received, I'll set to work reminding them...\nSent reminders to ${remindees} people\nAll done`);
+    return;
 }));
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
     if (member.id === config_1.QATARI_ID) {

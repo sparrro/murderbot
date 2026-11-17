@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID } from "./config"; 
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID } from "./config"; 
 import { Client, DMChannel, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, TextChannel } from "discord.js";
 import {
     findMods,
@@ -7,10 +7,12 @@ import reminder from "./utils/reminder";
 import { banUser, demoteModerator, kickUser } from "./utils/weapons";
 import { generalWiper } from "./utils/generalWiper";
 import moment from "moment-timezone";
+import { sleep } from "./utils/sleep";
 
 //cache
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
 const joins: number[] = [];
+const reminded: string[] = [];
 
 const client = new Client({
     intents: [
@@ -287,6 +289,33 @@ client.on("messageCreate", async (message) => {
     if (message.channel.id == MODLOG_CHANNEL_ID) return;
     await message.delete();
     await message.author.send("You're on your private account dummy!");
+});
+
+client.on("messageCreate", async (message) => { //get rid of this and just do the on join individual ones
+    if (message.guild) return;
+    if (message.author.id != LOLAPAZ_ID && message.author.id != AMY_ID && message.author.id != MY_ID) return;
+    if (!message.content.toLowerCase().includes("member role")) return;
+    const reply = await message.author.send("Order received, I'll set to work reminding them...");
+    let remindees = 0;
+    const server = client.guilds.cache.get(SERVER_ID!);
+    const members = await server?.members.fetch();
+    if (!members) {
+        console.log("Couldn't get member list");
+        return;
+    };
+    for (const [, member] of members) {
+        if (!member.roles.cache.has(MEMBER_ROLE_ID!) && !reminded.includes(member.id)) {
+            try {
+                await member.send("Hello there! I'm the head of security for Lola Paz's server\nI just wanted to let you know there's a lot more to the server than you can see upon joining\nYou can gain access to the rest of it by going to the 『♡』survey『♡』channel and answering some of the surveys to get the member role");
+                reminded.push(member.id);
+                remindees++;
+            } catch {
+                console.log(`Could not dm ${member.displayName}`);
+            };
+        };
+    };
+    await reply.edit(`Order received, I'll set to work reminding them...\nSent reminders to ${remindees} people\nAll done`);
+    return;
 });
 
 client.on("guildMemberAdd", async (member) => {

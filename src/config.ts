@@ -24,7 +24,8 @@ const {
     DUNGEON_CHANNEL_ID,
     BOTCHI_ID,
     ART_ID,
-    MODLOG_CHANNEL_ID
+    MODLOG_CHANNEL_ID,
+    MEMBER_ROLE_ID
 } = process.env;
 
 if (
@@ -49,7 +50,8 @@ if (
     !DUNGEON_CHANNEL_ID ||
     !BOTCHI_ID ||
     !ART_ID ||
-    !MODLOG_CHANNEL_ID
+    !MODLOG_CHANNEL_ID ||
+    !MEMBER_ROLE_ID
 ) throw new Error("Missing environment variables");
 
 export {
@@ -74,5 +76,6 @@ export {
     DUNGEON_CHANNEL_ID,
     BOTCHI_ID,
     ART_ID,
-    MODLOG_CHANNEL_ID
+    MODLOG_CHANNEL_ID,
+    MEMBER_ROLE_ID
 };
