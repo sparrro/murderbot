@@ -329,11 +329,18 @@ client.on("guildMemberAdd", async (member) => {
 });
 
 client.on("guildMemberAdd", async (member) => {
-    await member.send(
-        "Welcome to Lola Paz's server!\n" +
-        "There's more to the server than you can see upon joining\n" +
-        `You can get access to the rest of it by going to <#${SURVEY_CHANNEL_ID}> and answering some surveys\n` +
-        "You should also read through the rules and get some roles in the roles channel once you have access to it"
-    );
+    try {
+        await member.send(
+            "Welcome to Lola Paz's server!\n" +
+            "There's more to the server than you can see upon joining\n" +
+            `You can get access to the rest of it by going to <#${SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+            "You should also read through the rules and get some roles in the roles channel once you have access to it"
+        );
+    } catch {
+        const server = client.guilds.cache.get(SERVER_ID!);
+        const modLog = server?.channels.cache.get(MODLOG_CHANNEL_ID!) as TextChannel;
+        await modLog.send(`Couldn't send a welcome dm to @<${member.user.id}> (${member.user.displayName}, id ${member.user.id})`)
+        console.log(`Failed to dm ${member.displayName}`)
+    };
     return;
 });
