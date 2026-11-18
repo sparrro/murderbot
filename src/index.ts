@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID } from "./config"; 
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID } from "./config"; 
 import { Client, DMChannel, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, TextChannel } from "discord.js";
 import {
     findMods,
@@ -90,6 +90,10 @@ client.once("clientReady", async () => {
     setInterval(async () => {
         await father?.send("Don't forget to renew my hosting!");
     }, 1000 * 60 * 60 * 24 * 2);
+
+    setInterval(() => {
+        console.log("It is currently " + moment(Date.now()).tz("Europe/Stockholm").format("YYYY-MM-DD HH:mm"));
+    }, 1000 * 60 * 60);
 
     /* await checkMemberRoles(server); */ //lola gör den själv
 
@@ -322,4 +326,14 @@ client.on("guildMemberAdd", async (member) => {
     if (member.id === QATARI_ID) {
         await banUser(member, "You're not welcome back unless you apologise to Lola first");
     };
+});
+
+client.on("guildMemberAdd", async (member) => {
+    await member.send(
+        "Welcome to Lola Paz's server!\n" +
+        "There's more to the server than you can see upon joining\n" +
+        `You can get access to the rest of it by going to <#${SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+        "You should also read through the rules and get some roles in the roles channel once you have access to it"
+    );
+    return;
 });

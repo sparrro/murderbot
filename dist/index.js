@@ -19,7 +19,6 @@ const reminder_1 = __importDefault(require("./utils/reminder"));
 const weapons_1 = require("./utils/weapons");
 const generalWiper_1 = require("./utils/generalWiper");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
-const sleep_1 = require("./utils/sleep");
 //cache
 const messages = [];
 const joins = [];
@@ -94,6 +93,9 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
     setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
         yield (father === null || father === void 0 ? void 0 : father.send("Don't forget to renew my hosting!"));
     }), 1000 * 60 * 60 * 24 * 2);
+    setInterval(() => {
+        console.log("It is currently " + (0, moment_timezone_1.default)(Date.now()).tz("Europe/Stockholm").format("YYYY-MM-DD HH:mm"));
+    }, 1000 * 60 * 60);
     /* await checkMemberRoles(server); */ //lola gör den själv
 }));
 client.login(config_1.TOKEN);
@@ -333,7 +335,6 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
                 yield member.send("Hello there! I'm the head of security for Lola Paz's server\nI just wanted to let you know there's a lot more to the server than you can see upon joining\nYou can gain access to the rest of it by going to the 『♡』survey『♡』channel and answering some of the surveys to get the member role");
                 reminded.push(member.id);
                 remindees++;
-                yield (0, sleep_1.sleep)(2000);
             }
             catch (_a) {
                 console.log(`Could not dm ${member.displayName}`);
@@ -351,4 +352,11 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
         yield (0, weapons_1.banUser)(member, "You're not welcome back unless you apologise to Lola first");
     }
     ;
+}));
+client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
+    yield member.send("Welcome to Lola Paz's server!\n" +
+        "There's more to the server than you can see upon joining\n" +
+        `You can get access to the rest of it by going to <#${config_1.SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+        "You should also read through the rules and get some roles in the roles channel once you have access to it");
+    return;
 }));
