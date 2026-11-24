@@ -294,6 +294,7 @@ client.on("guildMemberRemove", (leaver) => __awaiter(void 0, void 0, void 0, fun
     }
     ;
     const date = (0, moment_timezone_1.default)(leaver.joinedAt).tz("America/Vancouver").format("YYYY-MM-DD HH:mm");
+    const difference = Date.now() - leaver.joinedTimestamp;
     yield modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}, id ${leaver.user.id}) left\nThey joined at ${date}`);
 }));
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
