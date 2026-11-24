@@ -8,6 +8,7 @@ import { banUser, demoteModerator, kickUser } from "./utils/weapons";
 import { generalWiper } from "./utils/generalWiper";
 import moment from "moment-timezone";
 import { sleep } from "./utils/sleep";
+import { formatTime } from "./utils/formatTime";
 
 //cache
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
@@ -277,7 +278,9 @@ client.on("guildMemberRemove", async (leaver) => {
         return;
     };
     const date = moment(leaver.joinedAt).tz("America/Vancouver").format("YYYY-MM-DD HH:mm");
-    await modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}, id ${leaver.user.id}) left\nThey joined at ${date}`);
+    const difference = Date.now() - leaver.joinedTimestamp!
+    const timeSpent = formatTime(difference);
+    await modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}, id ${leaver.user.id}) left\nThey joined at ${date} (here for ${timeSpent})`);
 });
 
 client.on("messageCreate", async (message) => {
