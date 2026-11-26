@@ -14,6 +14,7 @@ import { formatTime } from "./utils/formatTime";
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
 const joins: number[] = [];
 const reminded: string[] = [];
+let assignMemberRole = false;
 
 const client = new Client({
     intents: [
@@ -298,7 +299,7 @@ client.on("messageCreate", async (message) => {
     await message.author.send("You're on your private account dummy!");
 });
 
-client.on("messageCreate", async (message) => { //get rid of this and just do the on join individual ones
+/* client.on("messageCreate", async (message) => { //get rid of this and just do the on join individual ones
     if (message.guild) return;
     if (message.author.id != LOLAPAZ_ID && message.author.id != AMY_ID && message.author.id != MY_ID) return;
     if (!message.content.toLowerCase().includes("member role")) return;
@@ -323,7 +324,7 @@ client.on("messageCreate", async (message) => { //get rid of this and just do th
     };
     await reply.edit(`Order received, I'll set to work reminding them...\nSent reminders to ${remindees} people\nAll done`);
     return;
-});
+}); */
 
 client.on("guildMemberAdd", async (member) => {
     if (member.id === QATARI_ID) {
@@ -332,11 +333,44 @@ client.on("guildMemberAdd", async (member) => {
 });
 
 client.on("guildMemberAdd", async (member) => {
-    await member.send(
-        "Welcome to Lola Paz's server!\n" +
-        "There's more to the server than you can see upon joining\n" +
-        `You can get access to the rest of it by going to <#${SURVEY_CHANNEL_ID}> and answering some surveys\n` +
-        "You should also read through the rules and get some roles in the roles channel once you have access to it"
-    );
+    try {
+        if (assignMemberRole) {
+            await member.roles.add(MEMBER_ROLE_ID!);
+            await member.send(
+                "Welcome to Lola Paz's server!\n" +
+                "There's more to the server than you can see upon joining\n" +
+                `You can get access to the rest of it by going to <#${SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+                "You should also read through the rules and get some roles in the roles channel once you have access to it\n" +
+                "The bot responsible for the surveys is down at the moment so I assigned you the role member role myself"
+            )
+        } else {
+            await member.send(
+                "Welcome to Lola Paz's server!\n" +
+                "There's more to the server than you can see upon joining\n" +
+                `You can get access to the rest of it by going to <#${SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+                "You should also read through the rules and get some roles in the roles channel once you have access to it"
+            );
+        };
+    } catch {
+        console.log(`Couldn't send a welcome dm to ${member.displayName}`);
+    };
+    
     return;
+});
+
+client.on("messageCreate", async (message) => {
+    if (message.guild) return;
+    if (message.author.id != MY_ID && message.author.id != LOLAPAZ_ID && message.author.id != AMY_ID) return;
+    if (message.content.toLowerCase().includes("member role")) {
+        assignMemberRole = !assignMemberRole;
+        try {
+            if (assignMemberRole) {
+                await message.author.send("Understood, I'll assign the member role to new members");
+            } else {
+                await message.author.send("Understood, I'll stop assigning the member role to new members");
+            };
+        } catch {
+            console.log(`Couldn't dm ${message.author.displayName} about member role assignment`);
+        };
+    };
 });

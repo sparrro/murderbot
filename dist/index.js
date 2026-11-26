@@ -19,10 +19,12 @@ const reminder_1 = __importDefault(require("./utils/reminder"));
 const weapons_1 = require("./utils/weapons");
 const generalWiper_1 = require("./utils/generalWiper");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
+const formatTime_1 = require("./utils/formatTime");
 //cache
 const messages = [];
 const joins = [];
 const reminded = [];
+let assignMemberRole = false;
 const client = new discord_js_1.Client({
     intents: [
         discord_js_1.GatewayIntentBits.GuildMembers,
@@ -295,7 +297,8 @@ client.on("guildMemberRemove", (leaver) => __awaiter(void 0, void 0, void 0, fun
     ;
     const date = (0, moment_timezone_1.default)(leaver.joinedAt).tz("America/Vancouver").format("YYYY-MM-DD HH:mm");
     const difference = Date.now() - leaver.joinedTimestamp;
-    yield modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}, id ${leaver.user.id}) left\nThey joined at ${date}`);
+    const timeSpent = (0, formatTime_1.formatTime)(difference);
+    yield modLog.send(`<@${leaver.user.id}> (${leaver.user.displayName}, id ${leaver.user.id}) left\nThey joined at ${date} (here for ${timeSpent})`);
 }));
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
     if (message.author.id != config_1.BOTCHI_ID)
@@ -314,40 +317,32 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
     yield message.delete();
     yield message.author.send("You're on your private account dummy!");
 }));
-client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
-    if (message.guild)
-        return;
-    if (message.author.id != config_1.LOLAPAZ_ID && message.author.id != config_1.AMY_ID && message.author.id != config_1.MY_ID)
-        return;
-    if (!message.content.toLowerCase().includes("member role"))
-        return;
-    const reply = yield message.author.send("Order received, I'll set to work reminding them...");
+/* client.on("messageCreate", async (message) => { //get rid of this and just do the on join individual ones
+    if (message.guild) return;
+    if (message.author.id != LOLAPAZ_ID && message.author.id != AMY_ID && message.author.id != MY_ID) return;
+    if (!message.content.toLowerCase().includes("member role")) return;
+    const reply = await message.author.send("Order received, I'll set to work reminding them...");
     let remindees = 0;
-    const server = client.guilds.cache.get(config_1.SERVER_ID);
-    const members = yield (server === null || server === void 0 ? void 0 : server.members.fetch());
+    const server = client.guilds.cache.get(SERVER_ID!);
+    const members = await server?.members.fetch();
     if (!members) {
         console.log("Couldn't get member list");
         return;
-    }
-    ;
+    };
     for (const [, member] of members) {
-        if (!member.roles.cache.has(config_1.MEMBER_ROLE_ID) && !reminded.includes(member.id)) {
+        if (!member.roles.cache.has(MEMBER_ROLE_ID!) && !reminded.includes(member.id)) {
             try {
-                yield member.send("Hello there! I'm the head of security for Lola Paz's server\nI just wanted to let you know there's a lot more to the server than you can see upon joining\nYou can gain access to the rest of it by going to the 『♡』survey『♡』channel and answering some of the surveys to get the member role");
+                await member.send("Hello there! I'm the head of security for Lola Paz's server\nI just wanted to let you know there's a lot more to the server than you can see upon joining\nYou can gain access to the rest of it by going to the 『♡』survey『♡』channel and answering some of the surveys to get the member role");
                 reminded.push(member.id);
                 remindees++;
-            }
-            catch (_a) {
+            } catch {
                 console.log(`Could not dm ${member.displayName}`);
-            }
-            ;
-        }
-        ;
-    }
-    ;
-    yield reply.edit(`Order received, I'll set to work reminding them...\nSent reminders to ${remindees} people\nAll done`);
+            };
+        };
+    };
+    await reply.edit(`Order received, I'll set to work reminding them...\nSent reminders to ${remindees} people\nAll done`);
     return;
-}));
+}); */
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
     if (member.id === config_1.QATARI_ID) {
         yield (0, weapons_1.banUser)(member, "You're not welcome back unless you apologise to Lola first");
@@ -355,9 +350,49 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
     ;
 }));
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
-    yield member.send("Welcome to Lola Paz's server!\n" +
-        "There's more to the server than you can see upon joining\n" +
-        `You can get access to the rest of it by going to <#${config_1.SURVEY_CHANNEL_ID}> and answering some surveys\n` +
-        "You should also read through the rules and get some roles in the roles channel once you have access to it");
+    try {
+        if (assignMemberRole) {
+            yield member.roles.add(config_1.MEMBER_ROLE_ID);
+            yield member.send("Welcome to Lola Paz's server!\n" +
+                "There's more to the server than you can see upon joining\n" +
+                `You can get access to the rest of it by going to <#${config_1.SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+                "You should also read through the rules and get some roles in the roles channel once you have access to it\n" +
+                "The bot responsible for the surveys is down at the moment so I assigned you the role member role myself");
+        }
+        else {
+            yield member.send("Welcome to Lola Paz's server!\n" +
+                "There's more to the server than you can see upon joining\n" +
+                `You can get access to the rest of it by going to <#${config_1.SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+                "You should also read through the rules and get some roles in the roles channel once you have access to it");
+        }
+        ;
+    }
+    catch (_a) {
+        console.log(`Couldn't send a welcome dm to ${member.displayName}`);
+    }
+    ;
     return;
+}));
+client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
+    if (message.guild)
+        return;
+    if (message.author.id != config_1.MY_ID && message.author.id != config_1.LOLAPAZ_ID && message.author.id != config_1.AMY_ID)
+        return;
+    if (message.content.toLowerCase().includes("member role")) {
+        assignMemberRole = !assignMemberRole;
+        try {
+            if (assignMemberRole) {
+                yield message.author.send("Understood, I'll assign the member role to new members");
+            }
+            else {
+                yield message.author.send("Understood, I'll stop assigning the member role to new members");
+            }
+            ;
+        }
+        catch (_a) {
+            console.log(`Couldn't dm ${message.author.displayName} about member role assignment`);
+        }
+        ;
+    }
+    ;
 }));
