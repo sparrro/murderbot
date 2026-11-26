@@ -1,5 +1,5 @@
 import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID } from "./config"; 
-import { Client, DMChannel, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, TextChannel } from "discord.js";
+import { Client, DMChannel, EmbedBuilder, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, TextChannel } from "discord.js";
 import {
     findMods,
 } from "./utils/findMemberFunctions";
@@ -342,7 +342,14 @@ client.on("guildMemberAdd", async (member) => {
                 `You can get access to the rest of it by going to <#${SURVEY_CHANNEL_ID}> and answering some surveys\n` +
                 "You should also read through the rules and get some roles in the roles channel once you have access to it\n" +
                 "The bot responsible for the surveys is down at the moment so I assigned you the role member role myself"
-            )
+            );
+            const server = client.guilds.cache.get(SERVER_ID!);
+            const generalChannel = (await server?.channels.fetch())!.get(GENERAL_CHANNEL_ID!) as TextChannel;
+            await generalChannel.send({
+                content: `Everybody welcome <@${member.user.id}>\n` +
+                "Source: e621.net/posts/4474155",
+                files: ["assets/welcome.gif"]
+            });
         } else {
             await member.send(
                 "Welcome to Lola Paz's server!\n" +

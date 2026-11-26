@@ -358,6 +358,12 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
                 `You can get access to the rest of it by going to <#${config_1.SURVEY_CHANNEL_ID}> and answering some surveys\n` +
                 "You should also read through the rules and get some roles in the roles channel once you have access to it\n" +
                 "The bot responsible for the surveys is down at the moment so I assigned you the role member role myself");
+            const server = client.guilds.cache.get(config_1.SERVER_ID);
+            const generalChannel = (yield (server === null || server === void 0 ? void 0 : server.channels.fetch())).get(config_1.GENERAL_CHANNEL_ID);
+            yield generalChannel.send({
+                content: `Everybody welcome <@${member.user.id}>`,
+                files: ["assets/welcome.gif"]
+            });
         }
         else {
             yield member.send("Welcome to Lola Paz's server!\n" +
@@ -368,7 +374,10 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
         ;
     }
     catch (_a) {
-        console.log(`Couldn't send a welcome dm to ${member.displayName}`);
+        const server = client.guilds.cache.get(config_1.SERVER_ID);
+        const modLog = server === null || server === void 0 ? void 0 : server.channels.cache.get(config_1.MODLOG_CHANNEL_ID);
+        yield modLog.send(`Couldn't send a welcome dm to @<${member.user.id}> (${member.user.displayName}, id ${member.user.id})`);
+        console.log(`Failed to dm ${member.displayName}`);
     }
     ;
     return;
