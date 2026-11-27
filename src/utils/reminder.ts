@@ -24,20 +24,13 @@ If you want me to stop just dm me "stop"` : ""}
 };
 
 class ReminderManager {
-    botherHer = false;
+    botherHer = true;
     counter = 1;
     remindHer = async (server: Guild) => {
         const time = randomInterval();
         if (this.botherHer) {
             const { message, count } = messageGenerator();
-            await server.members.fetch();
-            let her: GuildMember | undefined;
-            console.log("Attempting to find her main account...");
-            her = server.members.cache.get(AMY_ID!);
-            if (!her) {
-                console.log("Failed to find her main account, attempting to find her other account...");
-                her = server.members.cache.get(LOLAPAZ_ID!);
-            };
+            const her = await server.members.fetch(AMY_ID!) ?? await server.members.fetch(LOLAPAZ_ID!);
             if (her) {
                 console.log(`Account found: ${her.displayName}`);
                 await her.send(message);
@@ -55,14 +48,9 @@ class ReminderManager {
         this.botherHer = false;
     };
     startAgain = async (client: Client) => {
-        setTimeout(async () => { //timeout to dodge rate limiting
-            const server = client.guilds.cache.get(SERVER_ID!);
-            await server?.members.fetch();
-            let her: GuildMember | undefined;
-            her = server?.members.cache.get(AMY_ID!);
-            if (!her) {
-                her = server?.members.cache.get(LOLAPAZ_ID!);
-            };
+        setTimeout(async () => {
+            const server = client.guilds.cache.get(SERVER_ID!) ?? await client.guilds.fetch(SERVER_ID!);
+            const her = await server.members.fetch(AMY_ID!) ?? await server.members.fetch(LOLAPAZ_ID!);
             const { message, count } = messageGenerator();
             await her?.send(message);
             reminderCounter[count]++;

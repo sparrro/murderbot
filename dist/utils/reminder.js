@@ -31,21 +31,14 @@ If you want me to stop just dm me "stop"` : ""}
 };
 class ReminderManager {
     constructor() {
-        this.botherHer = false;
+        this.botherHer = true;
         this.counter = 1;
         this.remindHer = (server) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const time = (0, randomTime_1.randomInterval)();
             if (this.botherHer) {
                 const { message, count } = messageGenerator();
-                yield server.members.fetch();
-                let her;
-                console.log("Attempting to find her main account...");
-                her = server.members.cache.get(config_1.AMY_ID);
-                if (!her) {
-                    console.log("Failed to find her main account, attempting to find her other account...");
-                    her = server.members.cache.get(config_1.LOLAPAZ_ID);
-                }
-                ;
+                const her = (_a = yield server.members.fetch(config_1.AMY_ID)) !== null && _a !== void 0 ? _a : yield server.members.fetch(config_1.LOLAPAZ_ID);
                 if (her) {
                     console.log(`Account found: ${her.displayName}`);
                     yield her.send(message);
@@ -67,14 +60,9 @@ class ReminderManager {
         };
         this.startAgain = (client) => __awaiter(this, void 0, void 0, function* () {
             setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                const server = client.guilds.cache.get(config_1.SERVER_ID);
-                yield (server === null || server === void 0 ? void 0 : server.members.fetch());
-                let her;
-                her = server === null || server === void 0 ? void 0 : server.members.cache.get(config_1.AMY_ID);
-                if (!her) {
-                    her = server === null || server === void 0 ? void 0 : server.members.cache.get(config_1.LOLAPAZ_ID);
-                }
-                ;
+                var _a, _b;
+                const server = (_a = client.guilds.cache.get(config_1.SERVER_ID)) !== null && _a !== void 0 ? _a : yield client.guilds.fetch(config_1.SERVER_ID);
+                const her = (_b = yield server.members.fetch(config_1.AMY_ID)) !== null && _b !== void 0 ? _b : yield server.members.fetch(config_1.LOLAPAZ_ID);
                 const { message, count } = messageGenerator();
                 yield (her === null || her === void 0 ? void 0 : her.send(message));
                 reminderCounter[count]++;

@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID, REGION_ROLES_MESSAGE_ID, NORDIC_ROLE_ID, WESTERN_EUROPE_ROLE_ID, CENTRAL_EUROPE_ROLE_ID, SOUTHERN_EUROPE_ROLE_ID, EASTERN_EUROPE_ROLE_ID, NORTH_AMERICA_ROLE_ID, CENTRAL_AMERICA_ROLE_ID, CARIBBEAN_ROLE_ID, SOUTH_AMERICA_ROLE_ID, SUBSAHARAN_ROLE_ID, OCEANIA_ROLE_ID, NORTH_AFRICA_ROLE_ID, MIDDLE_EAST_ROLE_ID, CAUCASUS_ROLE_ID, SOUTH_ASIA_ROLE_ID, EAST_ASIA_ROLE_ID, SOUTHEAST_ASIA_ROLE_ID } from "./config"; 
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID, REGION_ROLES_MESSAGE_ID, NORDIC_ROLE_ID, WESTERN_EUROPE_ROLE_ID, CENTRAL_EUROPE_ROLE_ID, SOUTHERN_EUROPE_ROLE_ID, EASTERN_EUROPE_ROLE_ID, NORTH_AMERICA_ROLE_ID, CENTRAL_AMERICA_ROLE_ID, CARIBBEAN_ROLE_ID, SOUTH_AMERICA_ROLE_ID, SUBSAHARAN_ROLE_ID, OCEANIA_ROLE_ID, NORTH_AFRICA_ROLE_ID, MIDDLE_EAST_ROLE_ID, CAUCASUS_ROLE_ID, SOUTH_ASIA_ROLE_ID, EAST_ASIA_ROLE_ID, SOUTHEAST_ASIA_ROLE_ID, HE_HIM_ROLE_ID, THEY_THEM_ROLE_ID, SHE_HER_ROLE_ID, RURAL_ROLE_ID, SUBURBAN_ROLE_ID, URBAN_ROLE_ID, POLL_PINGER_ROLE_ID, STREAM_NOTIF_ROLE_ID, ANONYMOUS_ROLE_ID, CHAT_ROLE_ID, AMERICAN_ROLE_ID, CANADIAN_ROLE_ID, FRENCH_ROLE_ID, SPANISH_ROLE_ID, WASP_ROLE_ID, PRONOUN_ROLES_MESSAGE_ID, HABITAT_ROLES_MESSAGE_ID, PING_ROLE_MESSAGE_ID, NOTIF_ROLE_MESSAGE_ID, ANON_ROLE_MESSAGE_ID, CHAT_ROLE_MESSAGE_ID, AMERICAN_ROLE_MESSAGE_ID, CANADIAN_ROLE_MESSAGE_ID, FRENCH_ROLE_MESSAGE_ID, SPANISH_ROLE_MESSAGE_ID, WASP_ROLE_MESSAGE_ID, ROLES_CHANNEL_ID } from "./config"; 
 import { Client, DMChannel, EmbedBuilder, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, Partials, TextChannel } from "discord.js";
 import {
     findMods,
@@ -76,9 +76,9 @@ client.once("clientReady", async () => {
     const father = server.members.cache.get(MY_ID!);
     await father?.send("I'm online");
 
-    /* setTimeout(async () => {
+    setTimeout(async () => {
         await reminder.remindHer(server);
-    }, 30000); */
+    }, 30000);
 
     setTimeout(async () => generalWiper(server), 1000 * 10);
 
@@ -395,76 +395,166 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on("messageReactionAdd", async (reaction, user) => {
-    if (reaction.message.id != REGION_ROLES_MESSAGE_ID!) return;
+    if (reaction.message.channelId != ROLES_CHANNEL_ID) return;
     const server = client.guilds.cache.get(SERVER_ID!);
     const member = server?.members.cache.get(user.id) ?? await server?.members.fetch(user.id);
-    switch (reaction.emoji.name) {
-        case "🫎": {
-            await member?.roles.add(NORDIC_ROLE_ID!);
+    switch (reaction.message.id) {
+        case REGION_ROLES_MESSAGE_ID: {
+            switch (reaction.emoji.name) {
+                case "🫎": {
+                    await member?.roles.add(NORDIC_ROLE_ID!);
+                    break;
+                }
+                case "🏰": {
+                    await member?.roles.add(WESTERN_EUROPE_ROLE_ID!);
+                    break;
+                }
+                case "🍺": {
+                    await member?.roles.add(CENTRAL_EUROPE_ROLE_ID!);
+                    break;
+                }
+                case "🏛️": {
+                    await member?.roles.add(SOUTHERN_EUROPE_ROLE_ID!);
+                    break;
+                }
+                case "🪆": {
+                    await member?.roles.add(EASTERN_EUROPE_ROLE_ID!);
+                    break;
+                }
+                case "🍁": {
+                    await member?.roles.add(NORTH_AMERICA_ROLE_ID!);
+                    break;
+                }
+                case "🌴": {
+                    await member?.roles.add(CENTRAL_AMERICA_ROLE_ID!);
+                    break;
+                }
+                case "🏖️": {
+                    await member?.roles.add(CARIBBEAN_ROLE_ID!);
+                    break;
+                }
+                case "🦙": {
+                    await member?.roles.add(SOUTH_AMERICA_ROLE_ID!);
+                    break;
+                }
+                case "🦁": {
+                    await member?.roles.add(SUBSAHARAN_ROLE_ID!);
+                    break;
+                }
+                case "🦘": {
+                    await member?.roles.add(OCEANIA_ROLE_ID!);
+                    break;
+                }
+                case "🏜️": {
+                    await member?.roles.add(NORTH_AFRICA_ROLE_ID!);
+                    break;
+                }
+                case "🐫": {
+                    await member?.roles.add(MIDDLE_EAST_ROLE_ID!);
+                    break;
+                }
+                case "🏔️": {
+                    await member?.roles.add(CAUCASUS_ROLE_ID!);
+                    break;
+                }
+                case "🐅": {
+                    await member?.roles.add(SOUTH_ASIA_ROLE_ID!);
+                    break;
+                }
+                case "🐉": {
+                    await member?.roles.add(EAST_ASIA_ROLE_ID!);
+                    break;
+                }
+                case "🐘": {
+                    await member?.roles.add(SOUTHEAST_ASIA_ROLE_ID!);
+                    break;
+                }
+            }
+        }
+        case PRONOUN_ROLES_MESSAGE_ID: {
+            switch (reaction.emoji.name) {
+                case "♂️": {
+                    await member?.roles.add(HE_HIM_ROLE_ID!);
+                    break;
+                }
+                case "⚧": {
+                    await member?.roles.add(THEY_THEM_ROLE_ID!);
+                    break;
+                }
+                case "♀️": {
+                    await member?.roles.add(SHE_HER_ROLE_ID!);
+                    break;
+                }
+            }
+        }
+        case HABITAT_ROLES_MESSAGE_ID: {
+            switch (reaction.emoji.name) {
+                case "🏞️": {
+                    await member?.roles.add(RURAL_ROLE_ID!);
+                    break;
+                }
+                case "🏘️": {
+                    await member?.roles.add(SUBURBAN_ROLE_ID!);
+                    break;
+                }
+                case "🌆": {
+                    await member?.roles.add(URBAN_ROLE_ID!);
+                    break;
+                }
+            }
+        }
+        case PING_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🔔") {
+                await member?.roles.add(POLL_PINGER_ROLE_ID!);
+            }
             break;
         }
-        case "🏰": {
-            await member?.roles.add(WESTERN_EUROPE_ROLE_ID!);
+        case NOTIF_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🍑") {
+                await member?.roles.add(STREAM_NOTIF_ROLE_ID!);
+            }
             break;
         }
-        case "🍺": {
-            await member?.roles.add(CENTRAL_EUROPE_ROLE_ID!);
+        case ANON_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "💀") {
+                await member?.roles.add(ANONYMOUS_ROLE_ID!);
+            }
             break;
         }
-        case "🏛️": {
-            await member?.roles.add(SOUTHERN_EUROPE_ROLE_ID!);
+        case CHAT_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "📣") {
+                await member?.roles.add(CHAT_ROLE_ID!);
+            }
             break;
         }
-        case "🪆": {
-            await member?.roles.add(EASTERN_EUROPE_ROLE_ID!);
+        case AMERICAN_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🦅") {
+                await member?.roles.add(AMERICAN_ROLE_ID!);
+            }
             break;
         }
-        case "🍁": {
-            await member?.roles.add(NORTH_AMERICA_ROLE_ID!);
+        case CANADIAN_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🇨🇦") {
+                await member?.roles.add(CANADIAN_ROLE_ID!);
+            }
             break;
         }
-        case "🌴": {
-            await member?.roles.add(CENTRAL_AMERICA_ROLE_ID!);
+        case FRENCH_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🍾") {
+                await member?.roles.add(FRENCH_ROLE_ID!);
+            }
             break;
         }
-        case "🏖️": {
-            await member?.roles.add(CARIBBEAN_ROLE_ID!);
+        case SPANISH_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🍷") {
+                await member?.roles.add(SPANISH_ROLE_ID!);
+            }
             break;
         }
-        case "🦙": {
-            await member?.roles.add(SOUTH_AMERICA_ROLE_ID!);
-            break;
-        }
-        case "🦁": {
-            await member?.roles.add(SUBSAHARAN_ROLE_ID!);
-            break;
-        }
-        case "🦘": {
-            await member?.roles.add(OCEANIA_ROLE_ID!);
-            break;
-        }
-        case "🏜️": {
-            await member?.roles.add(NORTH_AFRICA_ROLE_ID!);
-            break;
-        }
-        case "🐫": {
-            await member?.roles.add(MIDDLE_EAST_ROLE_ID!);
-            break;
-        }
-        case "🏔️": {
-            await member?.roles.add(CAUCASUS_ROLE_ID!);
-            break;
-        }
-        case "🐅": {
-            await member?.roles.add(SOUTH_ASIA_ROLE_ID!);
-            break;
-        }
-        case "🐉": {
-            await member?.roles.add(EAST_ASIA_ROLE_ID!);
-            break;
-        }
-        case "🐘": {
-            await member?.roles.add(SOUTHEAST_ASIA_ROLE_ID!);
+        case WASP_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🐝") {
+                await member?.roles.add(WASP_ROLE_ID!);
+            }
             break;
         }
     }
