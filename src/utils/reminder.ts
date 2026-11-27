@@ -24,7 +24,7 @@ If you want me to stop just dm me "stop"` : ""}
 };
 
 class ReminderManager {
-    botherHer = true;
+    botherHer = false;
     counter = 1;
     remindHer = async (server: Guild) => {
         const time = randomInterval();

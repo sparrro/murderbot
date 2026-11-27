@@ -427,6 +427,22 @@ client.on("messageReactionAdd", (reaction, user) => __awaiter(void 0, void 0, vo
             yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.NORDIC_ROLE_ID));
             break;
         }
+        case "🏰": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.WESTERN_EUROPE_ROLE_ID));
+            break;
+        }
+        case "🍺": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.CENTRAL_EUROPE_ROLE_ID));
+            break;
+        }
+        case "🏛️": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.SOUTHERN_EUROPE_ROLE_ID));
+            break;
+        }
+        case "🪆": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.EASTERN_EUROPE_ROLE_ID));
+            break;
+        }
     }
     return;
 }));

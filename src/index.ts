@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID, REGION_ROLES_MESSAGE_ID, NORDIC_ROLE_ID } from "./config"; 
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID, REGION_ROLES_MESSAGE_ID, NORDIC_ROLE_ID, WESTERN_EUROPE_ROLE_ID, CENTRAL_EUROPE_ROLE_ID, SOUTHERN_EUROPE_ROLE_ID, EASTERN_EUROPE_ROLE_ID } from "./config"; 
 import { Client, DMChannel, EmbedBuilder, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, Partials, TextChannel } from "discord.js";
 import {
     findMods,
@@ -398,10 +398,25 @@ client.on("messageReactionAdd", async (reaction, user) => {
     if (reaction.message.id != REGION_ROLES_MESSAGE_ID!) return;
     const server = client.guilds.cache.get(SERVER_ID!);
     const member = server?.members.cache.get(user.id) ?? await server?.members.fetch(user.id);
-    console.log(member?.displayName)
     switch (reaction.emoji.name) {
         case "🫎": {
             await member?.roles.add(NORDIC_ROLE_ID!);
+            break;
+        }
+        case "🏰": {
+            await member?.roles.add(WESTERN_EUROPE_ROLE_ID!);
+            break;
+        }
+        case "🍺": {
+            await member?.roles.add(CENTRAL_EUROPE_ROLE_ID!);
+            break;
+        }
+        case "🏛️": {
+            await member?.roles.add(SOUTHERN_EUROPE_ROLE_ID!);
+            break;
+        }
+        case "🪆": {
+            await member?.roles.add(EASTERN_EUROPE_ROLE_ID!);
             break;
         }
     }
