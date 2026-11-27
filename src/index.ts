@@ -332,39 +332,41 @@ client.on("guildMemberAdd", async (member) => {
     };
 });
 
-client.on("guildMemberAdd", async (member) => {
-    try {
-        if (assignMemberRole) {
-            await member.roles.add(MEMBER_ROLE_ID!);
+client.on("guildMemberAdd", async (member ) => {
+    const server = client.guilds.cache.get(SERVER_ID!);
+    await server!.channels.fetch();
+    const generalChannel = server?.channels.cache.get(GENERAL_CHANNEL_ID!) as TextChannel;
+    const modLog = server?.channels.cache.get(MODLOG_CHANNEL_ID!) as TextChannel;
+    if (assignMemberRole) {
+        await member.roles.add(MEMBER_ROLE_ID!);
+        await generalChannel!.send({
+            content: `Welcome <@${member.user.id}>\n` +
+            "Source: e621.net/posts/4474155",
+            files: ["assets/welcome.gif"]
+        });
+        try {
             await member.send(
                 "Welcome to Lola Paz's server!\n" +
-                "There's more to the server than you can see upon joining\n" +
-                `You can get access to the rest of it by going to <#${SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+                "There's more to the server than you can see upon joiningn" +
+                `You get access to the rest of it by going to <#${SURVEY_CHANNEL_ID!}> and answering some surveys\n` +
                 "You should also read through the rules and get some roles in the roles channel once you have access to it\n" +
-                "The bot responsible for the surveys is down at the moment so I assigned you the role member role myself"
+                "The bot responsible for the surveys is down at the moment so I assigned you the member role myself"
             );
-            const server = client.guilds.cache.get(SERVER_ID!);
-            const generalChannel = (await server?.channels.fetch())!.get(GENERAL_CHANNEL_ID!) as TextChannel;
-            await generalChannel.send({
-                content: `Everybody welcome <@${member.user.id}>\n` +
-                "Source: e621.net/posts/4474155",
-                files: ["assets/welcome.gif"]
-            });
-        } else {
+        } catch {
+            await modLog.send(`Couldn't send a welcome dm to <@${member.user.id}> (${member.displayName}, id ${member.user.id})`)
+        };
+    } else {
+        try {
             await member.send(
                 "Welcome to Lola Paz's server!\n" +
-                "There's more to the server than you can see upon joining\n" +
-                `You can get access to the rest of it by going to <#${SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+                "There's more to the server than you can see upon joiningn" +
+                `You get access to the rest of it by going to <#${SURVEY_CHANNEL_ID!}> and answering some surveys\n` +
                 "You should also read through the rules and get some roles in the roles channel once you have access to it"
             );
+        } catch {
+            await modLog.send(`Couldn't send a welcome dm to <@${member.user.id}> (${member.displayName}, id ${member.user.id})`)
         };
-    } catch {
-        const server = client.guilds.cache.get(SERVER_ID!);
-        const modLog = server?.channels.cache.get(MODLOG_CHANNEL_ID!) as TextChannel;
-        await modLog.send(`Couldn't send a welcome dm to @<${member.user.id}> (${member.user.displayName}, id ${member.user.id})`)
-        console.log(`Failed to dm ${member.displayName}`)
     };
-    
     return;
 });
 
