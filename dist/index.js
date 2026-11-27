@@ -20,6 +20,7 @@ const weapons_1 = require("./utils/weapons");
 const generalWiper_1 = require("./utils/generalWiper");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const formatTime_1 = require("./utils/formatTime");
+const list_json_1 = __importDefault(require("../assets/list.json"));
 //cache
 const messages = [];
 const joins = [];
@@ -73,9 +74,15 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
         ;
     }
     ;
+    const { file, source } = list_json_1.default[Math.floor(Math.random() * list_json_1.default.length)];
     yield server.members.fetch();
     const father = server.members.cache.get(config_1.MY_ID);
-    yield (father === null || father === void 0 ? void 0 : father.send("I'm online"));
+    //await father?.send("I'm online");
+    yield (father === null || father === void 0 ? void 0 : father.send({
+        content: "Welcome {someone}!\n" +
+            `Source: ${source}`,
+        files: [`assets/${file}`]
+    }));
     setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
         yield reminder_1.default.remindHer(server);
     }), 30000);
@@ -350,34 +357,40 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
     ;
 }));
 client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (assignMemberRole) {
-            yield member.roles.add(config_1.MEMBER_ROLE_ID);
+    const server = client.guilds.cache.get(config_1.SERVER_ID);
+    yield server.channels.fetch();
+    const generalChannel = server === null || server === void 0 ? void 0 : server.channels.cache.get(config_1.GENERAL_CHANNEL_ID);
+    const modLog = server === null || server === void 0 ? void 0 : server.channels.cache.get(config_1.MODLOG_CHANNEL_ID);
+    if (assignMemberRole) {
+        yield member.roles.add(config_1.MEMBER_ROLE_ID);
+        yield generalChannel.send({
+            content: `Welcome <@${member.user.id}>\n` +
+                "Source: e621.net/posts/4474155",
+            files: ["assets/welcome.gif"]
+        });
+        try {
             yield member.send("Welcome to Lola Paz's server!\n" +
-                "There's more to the server than you can see upon joining\n" +
-                `You can get access to the rest of it by going to <#${config_1.SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+                "There's more to the server than you can see upon joiningn" +
+                `You get access to the rest of it by going to <#${config_1.SURVEY_CHANNEL_ID}> and answering some surveys\n` +
                 "You should also read through the rules and get some roles in the roles channel once you have access to it\n" +
-                "The bot responsible for the surveys is down at the moment so I assigned you the role member role myself");
-            const server = client.guilds.cache.get(config_1.SERVER_ID);
-            const generalChannel = (yield (server === null || server === void 0 ? void 0 : server.channels.fetch())).get(config_1.GENERAL_CHANNEL_ID);
-            yield generalChannel.send({
-                content: `Everybody welcome <@${member.user.id}>`,
-                files: ["assets/welcome.gif"]
-            });
+                "The bot responsible for the surveys is down at the moment so I assigned you the member role myself");
         }
-        else {
-            yield member.send("Welcome to Lola Paz's server!\n" +
-                "There's more to the server than you can see upon joining\n" +
-                `You can get access to the rest of it by going to <#${config_1.SURVEY_CHANNEL_ID}> and answering some surveys\n` +
-                "You should also read through the rules and get some roles in the roles channel once you have access to it");
+        catch (_a) {
+            yield modLog.send(`Couldn't send a welcome dm to <@${member.user.id}> (${member.displayName}, id ${member.user.id})`);
         }
         ;
     }
-    catch (_a) {
-        const server = client.guilds.cache.get(config_1.SERVER_ID);
-        const modLog = server === null || server === void 0 ? void 0 : server.channels.cache.get(config_1.MODLOG_CHANNEL_ID);
-        yield modLog.send(`Couldn't send a welcome dm to @<${member.user.id}> (${member.user.displayName}, id ${member.user.id})`);
-        console.log(`Failed to dm ${member.displayName}`);
+    else {
+        try {
+            yield member.send("Welcome to Lola Paz's server!\n" +
+                "There's more to the server than you can see upon joiningn" +
+                `You get access to the rest of it by going to <#${config_1.SURVEY_CHANNEL_ID}> and answering some surveys\n` +
+                "You should also read through the rules and get some roles in the roles channel once you have access to it");
+        }
+        catch (_b) {
+            yield modLog.send(`Couldn't send a welcome dm to <@${member.user.id}> (${member.displayName}, id ${member.user.id})`);
+        }
+        ;
     }
     ;
     return;

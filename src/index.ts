@@ -9,6 +9,7 @@ import { generalWiper } from "./utils/generalWiper";
 import moment from "moment-timezone";
 import { sleep } from "./utils/sleep";
 import { formatTime } from "./utils/formatTime";
+import gifs from "../assets/list.json";
 
 //cache
 const messages: OmitPartialGroupDMChannel<Message<boolean>>[] = [];
@@ -339,10 +340,11 @@ client.on("guildMemberAdd", async (member ) => {
     const modLog = server?.channels.cache.get(MODLOG_CHANNEL_ID!) as TextChannel;
     if (assignMemberRole) {
         await member.roles.add(MEMBER_ROLE_ID!);
+        const { file, source } = gifs[Math.floor(Math.random() * gifs.length)];
         await generalChannel!.send({
             content: `Welcome <@${member.user.id}>\n` +
-            "Source: e621.net/posts/4474155",
-            files: ["assets/welcome.gif"]
+            `Source: ${source}`,
+            files: [`assets/${file}`]
         });
         try {
             await member.send(
