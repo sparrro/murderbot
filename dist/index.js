@@ -35,6 +35,11 @@ const client = new discord_js_1.Client({
         discord_js_1.GatewayIntentBits.DirectMessages,
         discord_js_1.GatewayIntentBits.GuildMessageReactions
     ],
+    partials: [
+        discord_js_1.Partials.Message,
+        discord_js_1.Partials.Channel,
+        discord_js_1.Partials.Reaction
+    ]
 });
 client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Logged in as ${client.user.tag}`);
@@ -74,18 +79,12 @@ client.once("clientReady", () => __awaiter(void 0, void 0, void 0, function* () 
         ;
     }
     ;
-    const { file, source } = list_json_1.default[Math.floor(Math.random() * list_json_1.default.length)];
     yield server.members.fetch();
     const father = server.members.cache.get(config_1.MY_ID);
-    //await father?.send("I'm online");
-    yield (father === null || father === void 0 ? void 0 : father.send({
-        content: "Welcome {someone}!\n" +
-            `Source: ${source}`,
-        files: [`assets/${file}`]
-    }));
-    setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield reminder_1.default.remindHer(server);
-    }), 30000);
+    yield (father === null || father === void 0 ? void 0 : father.send("I'm online"));
+    /* setTimeout(async () => {
+        await reminder.remindHer(server);
+    }, 30000); */
     setTimeout(() => __awaiter(void 0, void 0, void 0, function* () { return (0, generalWiper_1.generalWiper)(server); }), 1000 * 10);
     /*
     Message cache cleaner
@@ -363,10 +362,11 @@ client.on("guildMemberAdd", (member) => __awaiter(void 0, void 0, void 0, functi
     const modLog = server === null || server === void 0 ? void 0 : server.channels.cache.get(config_1.MODLOG_CHANNEL_ID);
     if (assignMemberRole) {
         yield member.roles.add(config_1.MEMBER_ROLE_ID);
+        const { file, source } = list_json_1.default[Math.floor(Math.random() * list_json_1.default.length)];
         yield generalChannel.send({
             content: `Welcome <@${member.user.id}>\n` +
-                "Source: e621.net/posts/4474155",
-            files: ["assets/welcome.gif"]
+                `Source: ${source}`,
+            files: [`assets/${file}`]
         });
         try {
             yield member.send("Welcome to Lola Paz's server!\n" +
@@ -409,12 +409,24 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
             else {
                 yield message.author.send("Understood, I'll stop assigning the member role to new members");
             }
-            ;
         }
         catch (_a) {
             console.log(`Couldn't dm ${message.author.displayName} about member role assignment`);
         }
-        ;
     }
-    ;
+}));
+client.on("messageReactionAdd", (reaction, user) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    if (reaction.message.id != config_1.REGION_ROLES_MESSAGE_ID)
+        return;
+    const server = client.guilds.cache.get(config_1.SERVER_ID);
+    const member = (_a = server === null || server === void 0 ? void 0 : server.members.cache.get(user.id)) !== null && _a !== void 0 ? _a : yield (server === null || server === void 0 ? void 0 : server.members.fetch(user.id));
+    console.log(member === null || member === void 0 ? void 0 : member.displayName);
+    switch (reaction.emoji.name) {
+        case "🫎": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.NORDIC_ROLE_ID));
+            break;
+        }
+    }
+    return;
 }));

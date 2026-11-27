@@ -26,7 +26,9 @@ const {
     ART_ID,
     MODLOG_CHANNEL_ID,
     MEMBER_ROLE_ID,
-    SURVEY_CHANNEL_ID
+    SURVEY_CHANNEL_ID,
+    NORDIC_ROLE_ID,
+    REGION_ROLES_MESSAGE_ID
 } = process.env;
 
 if (
@@ -53,7 +55,9 @@ if (
     !ART_ID ||
     !MODLOG_CHANNEL_ID ||
     !MEMBER_ROLE_ID ||
-    !SURVEY_CHANNEL_ID
+    !SURVEY_CHANNEL_ID ||
+    !NORDIC_ROLE_ID ||
+    !REGION_ROLES_MESSAGE_ID
 ) throw new Error("Missing environment variables");
 
 export {
@@ -80,5 +84,7 @@ export {
     ART_ID,
     MODLOG_CHANNEL_ID,
     MEMBER_ROLE_ID,
-    SURVEY_CHANNEL_ID
+    SURVEY_CHANNEL_ID,
+    NORDIC_ROLE_ID,
+    REGION_ROLES_MESSAGE_ID
 };

@@ -1,5 +1,5 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID } from "./config"; 
-import { Client, DMChannel, EmbedBuilder, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, TextChannel } from "discord.js";
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID, REGION_ROLES_MESSAGE_ID, NORDIC_ROLE_ID } from "./config"; 
+import { Client, DMChannel, EmbedBuilder, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, Partials, TextChannel } from "discord.js";
 import {
     findMods,
 } from "./utils/findMemberFunctions";
@@ -26,6 +26,11 @@ const client = new Client({
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.GuildMessageReactions
     ],
+    partials: [
+        Partials.Message,
+        Partials.Channel,
+        Partials.Reaction
+    ]
 });
 
 client.once("clientReady", async () => {
@@ -71,9 +76,9 @@ client.once("clientReady", async () => {
     const father = server.members.cache.get(MY_ID!);
     await father?.send("I'm online");
 
-    setTimeout(async () => {
+    /* setTimeout(async () => {
         await reminder.remindHer(server);
-    }, 30000);
+    }, 30000); */
 
     setTimeout(async () => generalWiper(server), 1000 * 10);
 
@@ -382,9 +387,23 @@ client.on("messageCreate", async (message) => {
                 await message.author.send("Understood, I'll assign the member role to new members");
             } else {
                 await message.author.send("Understood, I'll stop assigning the member role to new members");
-            };
+            }
         } catch {
             console.log(`Couldn't dm ${message.author.displayName} about member role assignment`);
-        };
-    };
+        }
+    }
+});
+
+client.on("messageReactionAdd", async (reaction, user) => {
+    if (reaction.message.id != REGION_ROLES_MESSAGE_ID!) return;
+    const server = client.guilds.cache.get(SERVER_ID!);
+    const member = server?.members.cache.get(user.id) ?? await server?.members.fetch(user.id);
+    console.log(member?.displayName)
+    switch (reaction.emoji.name) {
+        case "🫎": {
+            await member?.roles.add(NORDIC_ROLE_ID!);
+            break;
+        }
+    }
+    return;
 });
