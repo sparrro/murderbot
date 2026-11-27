@@ -1,4 +1,4 @@
-import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID, REGION_ROLES_MESSAGE_ID, NORDIC_ROLE_ID, WESTERN_EUROPE_ROLE_ID, CENTRAL_EUROPE_ROLE_ID, SOUTHERN_EUROPE_ROLE_ID, EASTERN_EUROPE_ROLE_ID } from "./config"; 
+import { TOKEN, SERVER_ID, MY_ID, AMY_ID, GLOO_ID, LYKOPHOS_ID, NAMIRE_ID, TEEMOTHEE_ID, QATARI_ID, MODROLE_ID, LOLAPAZ_ID, HATERS_ID, CASPIAN_ID, MURKY_ID, ENEMY_ID, QUEZEL_ID, GENERAL_CHANNEL_ID, DUNGEON_CHANNEL_ID, BOTCHI_ID, ART_ID, MODLOG_CHANNEL_ID, MEMBER_ROLE_ID, SURVEY_CHANNEL_ID, REGION_ROLES_MESSAGE_ID, NORDIC_ROLE_ID, WESTERN_EUROPE_ROLE_ID, CENTRAL_EUROPE_ROLE_ID, SOUTHERN_EUROPE_ROLE_ID, EASTERN_EUROPE_ROLE_ID, NORTH_AMERICA_ROLE_ID, CENTRAL_AMERICA_ROLE_ID, CARIBBEAN_ROLE_ID, SOUTH_AMERICA_ROLE_ID, SUBSAHARAN_ROLE_ID, OCEANIA_ROLE_ID, NORTH_AFRICA_ROLE_ID, MIDDLE_EAST_ROLE_ID, CAUCASUS_ROLE_ID, SOUTH_ASIA_ROLE_ID, EAST_ASIA_ROLE_ID, SOUTHEAST_ASIA_ROLE_ID } from "./config"; 
 import { Client, DMChannel, EmbedBuilder, GatewayIntentBits, GuildMember, Message, MessageType, OmitPartialGroupDMChannel, Partials, TextChannel } from "discord.js";
 import {
     findMods,
@@ -417,6 +417,54 @@ client.on("messageReactionAdd", async (reaction, user) => {
         }
         case "🪆": {
             await member?.roles.add(EASTERN_EUROPE_ROLE_ID!);
+            break;
+        }
+        case "🍁": {
+            await member?.roles.add(NORTH_AMERICA_ROLE_ID!);
+            break;
+        }
+        case "🌴": {
+            await member?.roles.add(CENTRAL_AMERICA_ROLE_ID!);
+            break;
+        }
+        case "🏖️": {
+            await member?.roles.add(CARIBBEAN_ROLE_ID!);
+            break;
+        }
+        case "🦙": {
+            await member?.roles.add(SOUTH_AMERICA_ROLE_ID!);
+            break;
+        }
+        case "🦁": {
+            await member?.roles.add(SUBSAHARAN_ROLE_ID!);
+            break;
+        }
+        case "🦘": {
+            await member?.roles.add(OCEANIA_ROLE_ID!);
+            break;
+        }
+        case "🏜️": {
+            await member?.roles.add(NORTH_AFRICA_ROLE_ID!);
+            break;
+        }
+        case "🐫": {
+            await member?.roles.add(MIDDLE_EAST_ROLE_ID!);
+            break;
+        }
+        case "🏔️": {
+            await member?.roles.add(CAUCASUS_ROLE_ID!);
+            break;
+        }
+        case "🐅": {
+            await member?.roles.add(SOUTH_ASIA_ROLE_ID!);
+            break;
+        }
+        case "🐉": {
+            await member?.roles.add(EAST_ASIA_ROLE_ID!);
+            break;
+        }
+        case "🐘": {
+            await member?.roles.add(SOUTHEAST_ASIA_ROLE_ID!);
             break;
         }
     }

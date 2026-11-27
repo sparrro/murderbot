@@ -421,7 +421,6 @@ client.on("messageReactionAdd", (reaction, user) => __awaiter(void 0, void 0, vo
         return;
     const server = client.guilds.cache.get(config_1.SERVER_ID);
     const member = (_a = server === null || server === void 0 ? void 0 : server.members.cache.get(user.id)) !== null && _a !== void 0 ? _a : yield (server === null || server === void 0 ? void 0 : server.members.fetch(user.id));
-    console.log(member === null || member === void 0 ? void 0 : member.displayName);
     switch (reaction.emoji.name) {
         case "🫎": {
             yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.NORDIC_ROLE_ID));
@@ -441,6 +440,54 @@ client.on("messageReactionAdd", (reaction, user) => __awaiter(void 0, void 0, vo
         }
         case "🪆": {
             yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.EASTERN_EUROPE_ROLE_ID));
+            break;
+        }
+        case "🍁": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.NORTH_AMERICA_ROLE_ID));
+            break;
+        }
+        case "🌴": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.CENTRAL_AMERICA_ROLE_ID));
+            break;
+        }
+        case "🏖️": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.CARIBBEAN_ROLE_ID));
+            break;
+        }
+        case "🦙": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.SOUTH_AMERICA_ROLE_ID));
+            break;
+        }
+        case "🦁": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.SUBSAHARAN_ROLE_ID));
+            break;
+        }
+        case "🦘": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.OCEANIA_ROLE_ID));
+            break;
+        }
+        case "🏜️": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.NORTH_AFRICA_ROLE_ID));
+            break;
+        }
+        case "🐫": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.MIDDLE_EAST_ROLE_ID));
+            break;
+        }
+        case "🏔️": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.CAUCASUS_ROLE_ID));
+            break;
+        }
+        case "🐅": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.SOUTH_ASIA_ROLE_ID));
+            break;
+        }
+        case "🐉": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.EAST_ASIA_ROLE_ID));
+            break;
+        }
+        case "🐘": {
+            yield (member === null || member === void 0 ? void 0 : member.roles.add(config_1.SOUTHEAST_ASIA_ROLE_ID));
             break;
         }
     }
