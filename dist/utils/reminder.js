@@ -31,7 +31,7 @@ If you want me to stop just dm me "stop"` : ""}
 };
 class ReminderManager {
     constructor() {
-        this.botherHer = true;
+        this.botherHer = false;
         this.counter = 1;
         this.remindHer = (server) => __awaiter(this, void 0, void 0, function* () {
             var _a;

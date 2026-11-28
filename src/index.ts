@@ -560,3 +560,170 @@ client.on("messageReactionAdd", async (reaction, user) => {
     }
     return;
 });
+
+client.on("messageReactionRemove", async (reaction, user) => {
+    if (reaction.message.channelId != ROLES_CHANNEL_ID) return;
+    const server = client.guilds.cache.get(SERVER_ID!);
+    const member = server?.members.cache.get(user.id) ?? await server?.members.fetch(user.id);
+    switch (reaction.message.id) {
+        case REGION_ROLES_MESSAGE_ID: {
+            switch (reaction.emoji.name) {
+                case "🫎": {
+                    await member?.roles.remove(NORDIC_ROLE_ID!);
+                    break;
+                }
+                case "🏰": {
+                    await member?.roles.remove(WESTERN_EUROPE_ROLE_ID!);
+                    break;
+                }
+                case "🍺": {
+                    await member?.roles.remove(CENTRAL_EUROPE_ROLE_ID!);
+                    break;
+                }
+                case "🏛️": {
+                    await member?.roles.remove(SOUTHERN_EUROPE_ROLE_ID!);
+                    break;
+                }
+                case "🪆": {
+                    await member?.roles.remove(EASTERN_EUROPE_ROLE_ID!);
+                    break;
+                }
+                case "🍁": {
+                    await member?.roles.remove(NORTH_AMERICA_ROLE_ID!);
+                    break;
+                }
+                case "🌴": {
+                    await member?.roles.remove(CENTRAL_AMERICA_ROLE_ID!);
+                    break;
+                }
+                case "🏖️": {
+                    await member?.roles.remove(CARIBBEAN_ROLE_ID!);
+                    break;
+                }
+                case "🦙": {
+                    await member?.roles.remove(SOUTH_AMERICA_ROLE_ID!);
+                    break;
+                }
+                case "🦁": {
+                    await member?.roles.remove(SUBSAHARAN_ROLE_ID!);
+                    break;
+                }
+                case "🦘": {
+                    await member?.roles.remove(OCEANIA_ROLE_ID!);
+                    break;
+                }
+                case "🏜️": {
+                    await member?.roles.remove(NORTH_AFRICA_ROLE_ID!);
+                    break;
+                }
+                case "🐫": {
+                    await member?.roles.remove(MIDDLE_EAST_ROLE_ID!);
+                    break;
+                }
+                case "🏔️": {
+                    await member?.roles.remove(CAUCASUS_ROLE_ID!);
+                    break;
+                }
+                case "🐅": {
+                    await member?.roles.remove(SOUTH_ASIA_ROLE_ID!);
+                    break;
+                }
+                case "🐉": {
+                    await member?.roles.remove(EAST_ASIA_ROLE_ID!);
+                    break;
+                }
+                case "🐘": {
+                    await member?.roles.remove(SOUTHEAST_ASIA_ROLE_ID!);
+                    break;
+                }
+            }
+        }
+        case PRONOUN_ROLES_MESSAGE_ID: {
+            switch (reaction.emoji.name) {
+                case "♂️": {
+                    await member?.roles.remove(HE_HIM_ROLE_ID!);
+                    break;
+                }
+                case "⚧": {
+                    await member?.roles.remove(THEY_THEM_ROLE_ID!);
+                    break;
+                }
+                case "♀️": {
+                    await member?.roles.remove(SHE_HER_ROLE_ID!);
+                    break;
+                }
+            }
+        }
+        case HABITAT_ROLES_MESSAGE_ID: {
+            switch (reaction.emoji.name) {
+                case "🏞️": {
+                    await member?.roles.remove(RURAL_ROLE_ID!);
+                    break;
+                }
+                case "🏘️": {
+                    await member?.roles.remove(SUBURBAN_ROLE_ID!);
+                    break;
+                }
+                case "🌆": {
+                    await member?.roles.remove(URBAN_ROLE_ID!);
+                    break;
+                }
+            }
+        }
+        case PING_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🔔") {
+                await member?.roles.remove(POLL_PINGER_ROLE_ID!);
+            }
+            break;
+        }
+        case NOTIF_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🍑") {
+                await member?.roles.remove(STREAM_NOTIF_ROLE_ID!);
+            }
+            break;
+        }
+        case ANON_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "💀") {
+                await member?.roles.remove(ANONYMOUS_ROLE_ID!);
+            }
+            break;
+        }
+        case CHAT_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "📣") {
+                await member?.roles.remove(CHAT_ROLE_ID!);
+            }
+            break;
+        }
+        case AMERICAN_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🦅") {
+                await member?.roles.remove(AMERICAN_ROLE_ID!);
+            }
+            break;
+        }
+        case CANADIAN_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🇨🇦") {
+                await member?.roles.remove(CANADIAN_ROLE_ID!);
+            }
+            break;
+        }
+        case FRENCH_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🍾") {
+                await member?.roles.remove(FRENCH_ROLE_ID!);
+            }
+            break;
+        }
+        case SPANISH_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🍷") {
+                await member?.roles.remove(SPANISH_ROLE_ID!);
+            }
+            break;
+        }
+        case WASP_ROLE_MESSAGE_ID: {
+            if (reaction.emoji.name == "🐝") {
+                await member?.roles.remove(WASP_ROLE_ID!);
+            }
+            break;
+        }
+    }
+    return;
+});
